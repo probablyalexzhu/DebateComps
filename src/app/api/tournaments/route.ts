@@ -57,9 +57,24 @@ export async function GET() {
           const propertyName = headerMap[header] || header;
           let value = row[i] || '';
           
-          // Sanitize specific fields by removing spaces
+          // Sanitize specific fields
           if (propertyName === 'judgeRule' || propertyName === 'timezone') {
             value = value.replace(/\s+/g, '');
+          }
+          
+          // Sanitize regLink to extract just the URL
+          if (propertyName === 'regLink') {
+            // Remove common prefixes and extract URL
+            value = value.replace(/^(Teamreg|Team Reg|Team reg|Teams|Registration|Reg|Link):\s*/i, '');
+            // Remove any trailing text after the URL
+            value = value.split(/\s+/)[0];
+            // Ensure it starts with http/https or is a valid short URL
+            if (value && !value.match(/^https?:\/\//) && !value.match(/^bit\.ly\/|^tinyurl\.com\/|^t\.co\//)) {
+              // If it doesn't start with http/https, assume it's a relative URL and add https://
+              if (value.includes('.')) {
+                value = 'https://' + value;
+              }
+            }
           }
           
           tournament[propertyName] = value;

@@ -85,15 +85,17 @@ export function EventCard({ tournament }: EventCardProps) {
         </div>
 
         <div className="flex gap-2 pt-2 mt-auto">
-          <Button asChild className="flex-1" disabled={tournament.regLink === "TBA"}>
-            <a
-              href={tournament.regLink !== "TBA" ? tournament.regLink : undefined}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Register
-            </a>
-          </Button>
+          {tournament.regLink && tournament.regLink !== "TBA" && tournament.regLink.trim() !== "" ? (
+            <Button asChild className="flex-1">
+              <a href={tournament.regLink} target="_blank" rel="noopener noreferrer">
+                Register
+              </a>
+            </Button>
+          ) : (
+            <Button className="flex-1 opacity-50 cursor-not-allowed" disabled>
+              Coming Soon
+            </Button>
+          )}
           {tournament.infoLink && tournament.infoLink !== "TBA" && tournament.infoLink.trim() !== "" ? (
             <Button asChild variant="outline" className="flex-1 bg-transparent">
               <a href={tournament.infoLink} target="_blank" rel="noopener noreferrer">
