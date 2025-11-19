@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, Info } from "lucide-react"
+import { Calendar, MapPin, CircleDollarSign, Gavel } from "lucide-react"
 import { getCountryFlag } from "@/lib/country-flags"
 import { cn } from "@/lib/utils"
 
@@ -41,8 +41,9 @@ export function EventCard({ tournament }: EventCardProps) {
   }
 
   // Get team cap display value
-  const teamCapDisplay = tournament.teamCap && tournament.teamCap.trim() !== '' && tournament.teamCap !== 'N/A' 
-    ? tournament.teamCap 
+  const teamCapDisplay = tournament.teamCap && tournament.teamCap.trim() !== ''
+  && tournament.teamCap !== 'N/A' && tournament.teamCap !== 'TBA'
+    ? tournament.teamCap + " Teams"
     : 'N/A'
 
   return (
@@ -76,9 +77,16 @@ export function EventCard({ tournament }: EventCardProps) {
             </div>
 
             <div className="flex items-start gap-2 text-muted-foreground">
-              <Info className="h-4 w-4 shrink-0 mt-0.5" />
+              <CircleDollarSign className="h-4 w-4 shrink-0 mt-0.5" />
               <span className="leading-relaxed">
-                {tournament.judgeRule} • {tournament.fees} • {tournament.profitStatus}
+                {tournament.fees}
+              </span>
+            </div>
+
+            <div className="flex items-start gap-2 text-muted-foreground">
+              <Gavel className="h-4 w-4 shrink-0 mt-0.5" />
+              <span className="leading-relaxed">
+                {tournament.judgeRule}
               </span>
             </div>
           </div>
