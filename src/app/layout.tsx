@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/custom/footer";
+import { SiteHeader } from "@/components/custom/site-header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "DebateComps - The home for competitive debate",
-  description: "Discover the best upcoming debate competitions",
+  description: "Where debaters, adjudicators, and organizers come together to find the best opportunities.",
 };
 
 export default function RootLayout({
@@ -29,6 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="min-h-screen flex flex-col">
+          <SiteHeader />
           <main className="flex-1">
             {children}
           </main>

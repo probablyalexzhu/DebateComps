@@ -112,7 +112,7 @@ export default function Home() {
             {/* Text - in front */}
             <div className="relative z-10 flex flex-col justify-center h-full">
               <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
-              <p className="text-muted-foreground">Discover the best upcoming debate competitions</p>
+              <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
           </header>
           <div className="flex items-center justify-center py-12">
@@ -142,7 +142,7 @@ export default function Home() {
             {/* Text - in front */}
             <div className="relative z-10 flex flex-col justify-center h-full">
               <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
-              <p className="text-muted-foreground">Discover the best upcoming debate competitions</p>
+              <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
           </header>
           <div className="flex items-center justify-center py-12">
@@ -174,7 +174,7 @@ export default function Home() {
           {/* Text - in front */}
           <div className="relative z-10 flex flex-col justify-center h-full">
             <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
-            <p className="text-muted-foreground">Discover the best upcoming debate competitions</p>
+            <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
           </div>
         </header>
 
