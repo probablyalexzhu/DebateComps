@@ -3,6 +3,7 @@ import Link from "next/link";
 export function SiteHeader() {
   const navItems = [
     { href: "/", label: "Home" },
+    { href: "/saved", label: "Saved" },
     { href: "/about", label: "About" },
   ];
 
