@@ -1,9 +1,14 @@
+'use client'
+
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, CircleDollarSign, Gavel } from "lucide-react"
+import { Calendar, MapPin, CircleDollarSign, Gavel, Bookmark } from "lucide-react"
 import { getCountryFlag } from "@/lib/country-flags"
 import { cn } from "@/lib/utils"
+import { toggleSavedTournament, isTournamentSaved } from "@/lib/saved-tournaments"
+import { generateGoogleCalendarUrl } from "@/lib/calendar-export"
 
 interface Tournament {
   competitionName: string
@@ -24,7 +29,25 @@ interface EventCardProps {
 }
 
 export function EventCard({ tournament }: EventCardProps) {
+  // Generate unique ID for tournament
+  const tournamentId = `${tournament.competitionName}-${tournament.date}`.replace(/\s+/g, '-').toLowerCase()
+
+  const [isSaved, setIsSaved] = useState(false)
   const flag = getCountryFlag(tournament.location)
+
+  useEffect(() => {
+    setIsSaved(isTournamentSaved(tournamentId))
+  }, [tournamentId])
+
+  const handleToggleSave = () => {
+    const newSavedState = toggleSavedTournament(tournamentId)
+    setIsSaved(newSavedState)
+  }
+
+  const handleExportToGoogleCal = () => {
+    const url = generateGoogleCalendarUrl(tournament)
+    window.open(url, '_blank')
+  }
 
   // Helper function for format chip styling
   const getFormatChipStyle = (format: string) => {
@@ -35,7 +58,7 @@ export function EventCard({ tournament }: EventCardProps) {
 
   // Helper function for team cap chip styling
   const getTeamCapChipStyle = (teamCap: string) => {
-    const cap = parseInt(teamCap)
+    const cap = parseInt(teamCap, 10)
     if (!isNaN(cap) && cap > 80) return 'bg-yellow-100 text-yellow-800 border-yellow-200'
     return 'bg-secondary text-secondary-foreground'
   }
@@ -48,7 +71,16 @@ export function EventCard({ tournament }: EventCardProps) {
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col pt-0">
-      <div className="aspect-video bg-muted flex items-center justify-center text-6xl">{flag}</div>
+      <div className="aspect-video bg-muted flex items-center justify-center text-6xl relative">
+        {flag}
+        <button
+          onClick={handleToggleSave}
+          className="absolute top-2 right-2 p-2 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors cursor-pointer"
+          aria-label={isSaved ? "Remove from saved" : "Save tournament"}
+        >
+          <Bookmark className={cn("h-5 w-5", isSaved && "fill-current")} />
+        </button>
+      </div>
       <CardContent className="p-4 flex flex-col flex-1">
         <div className="space-y-3 flex-1">
           <div className="flex items-start gap-2">
@@ -115,6 +147,15 @@ export function EventCard({ tournament }: EventCardProps) {
               Info TBA
             </Button>
           )}
+          <Button
+            onClick={handleExportToGoogleCal}
+            variant="outline"
+            size="icon"
+            className="shrink-0 cursor-pointer"
+            title="Add to Google Calendar"
+          >
+            <Calendar className="h-4 w-4" />
+          </Button>
         </div>
       </CardContent>
     </Card>
