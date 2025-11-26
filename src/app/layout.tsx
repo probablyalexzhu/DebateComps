@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/custom/footer";
 import { SiteHeader } from "@/components/custom/site-header";
+import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
           <SiteHeader />
           <main className="flex-1">
             {children}
+            <Analytics />
           </main>
           <Footer />
         </div>
