@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react'
 import { EventCard } from '@/components/custom/event-card'
 import { Button } from '@/components/ui/button'
-import { Calendar, Info } from 'lucide-react'
+import { Calendar, Copy, Info } from 'lucide-react'
 import { getSavedTournaments } from '@/lib/saved-tournaments'
 import { downloadICalFile } from '@/lib/calendar-export'
+import { copyTournamentsToClipboard } from '@/lib/clipboard-copy'
 import type { Tournament } from '@/types/tournament'
 
 export default function SavedPage() {
@@ -13,6 +14,7 @@ export default function SavedPage() {
   const [savedTournaments, setSavedTournaments] = useState<Tournament[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [copyFeedback, setCopyFeedback] = useState<'idle' | 'copied' | 'error'>('idle')
 
   useEffect(() => {
     async function fetchTournaments() {
@@ -63,6 +65,18 @@ export default function SavedPage() {
     downloadICalFile(savedTournaments, 'saved-tournaments.ics')
   }
 
+  const handleCopyDetails = async () => {
+    if (savedTournaments.length === 0) return
+    const success = await copyTournamentsToClipboard(savedTournaments)
+    setCopyFeedback(success ? 'copied' : 'error')
+  }
+
+  useEffect(() => {
+    if (copyFeedback === 'idle') return
+    const timeout = window.setTimeout(() => setCopyFeedback('idle'), 2000)
+    return () => window.clearTimeout(timeout)
+  }, [copyFeedback])
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -82,7 +96,7 @@ export default function SavedPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4">Saved Tournaments</h1>
+        <h1 className="text-3xl font-bold mb-4">Saved Tournaments ({savedTournaments.length})</h1>
 
         <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6 flex items-start gap-3">
           <Info className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
@@ -96,11 +110,29 @@ export default function SavedPage() {
         </div>
 
         {savedTournaments.length > 0 && (
-          <div className="flex gap-2 mb-6">
+          <div className="flex flex-wrap gap-2 mb-6">
             <Button onClick={handleBulkExport} variant="default" className="gap-2 cursor-pointer">
               <Calendar className="h-4 w-4" />
-              Download Calendar File ({savedTournaments.length} events)
+              Download Calendar File
             </Button>
+            <div className="relative">
+              <Button
+                onClick={handleCopyDetails}
+                variant="secondary"
+                className="gap-2 cursor-pointer"
+              >
+                <Copy className="h-4 w-4" />
+                Copy Tournament Details
+              </Button>
+              <span
+                className={`pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 rounded-md bg-foreground px-3 py-1 text-xs text-background transition-all ${
+                  copyFeedback === 'idle' ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+                }`}
+                role="status"
+              >
+                {copyFeedback !== 'error' ? 'Copied!' : 'Copy failed'}
+              </span>
+            </div>
           </div>
         )}
       </div>

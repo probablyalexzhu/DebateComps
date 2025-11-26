@@ -58,7 +58,7 @@ export function downloadICalFile(tournaments: Tournament[], filename = 'tourname
   URL.revokeObjectURL(link.href);
 }
 
-function generateEventDetails(tournament: Tournament): string {
+export function generateEventDetails(tournament: Tournament): string {
   const parts = [];
 
   parts.push(`Format: ${tournament.format || 'TBA'}`);
@@ -100,7 +100,7 @@ function formatDateForGoogle(dateStr: string): string {
   }
 }
 
-function parseTournamentDateRange(dateStr: string): { startDate: Date; endDate: Date } {
+export function parseTournamentDateRange(dateStr: string): { startDate: Date; endDate: Date } {
   // Tournament dates are in format like "January 15-17 2025" or "Feb 20 2025"
   const cleaned = dateStr.trim();
 
