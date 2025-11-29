@@ -4,17 +4,22 @@ import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { EventCard } from "@/components/custom/event-card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Grid3x3, Calendar as CalendarIcon } from "lucide-react";
 import { Tournament } from "@/types/tournament";
 import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-bar";
+import { CalendarView } from "@/components/custom/calendar-view";
+import { cn } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 16;
+
+type ViewMode = 'grid' | 'calendar';
 
 export default function Home() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   const [filters, setFilters] = useState<FilterState>({
     searchText: "",
@@ -180,28 +185,65 @@ export default function Home() {
 
         <SearchFilterBar filters={filters} onFiltersChange={handleFiltersChange} />
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-          {currentTournaments.map((tournament, index) => (
-            <EventCard key={`${tournament.competitionName}-${index}`} tournament={tournament} />
-          ))}
+        <div className="flex gap-2 mb-6 border-b">
+          <button
+            onClick={() => setViewMode('grid')}
+            className={cn(
+              "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
+              viewMode === 'grid'
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <Grid3x3 className="h-4 w-4" />
+              Grid View
+            </div>
+          </button>
+          <button
+            onClick={() => setViewMode('calendar')}
+            className={cn(
+              "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
+              viewMode === 'calendar'
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <div className="flex items-center gap-2">
+              <CalendarIcon className="h-4 w-4" />
+              Calendar View
+            </div>
+          </button>
         </div>
 
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-4">
-            <Button variant="outline" onClick={goToPreviousPage} disabled={currentPage === 1}>
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Previous
-            </Button>
+        {viewMode === 'grid' ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+              {currentTournaments.map((tournament, index) => (
+                <EventCard key={`${tournament.competitionName}-${index}`} tournament={tournament} />
+              ))}
+            </div>
 
-            <span className="text-sm text-muted-foreground">
-              Page {currentPage} of {totalPages}
-            </span>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-4">
+                <Button variant="outline" onClick={goToPreviousPage} disabled={currentPage === 1}>
+                  <ChevronLeft className="h-4 w-4 mr-2" />
+                  Previous
+                </Button>
 
-            <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
-              Next
-              <ChevronRight className="h-4 w-4 ml-2" />
-            </Button>
-          </div>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+
+                <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+            )}
+          </>
+        ) : (
+          <CalendarView tournaments={filteredTournaments} />
         )}
       </div>
     </div>
