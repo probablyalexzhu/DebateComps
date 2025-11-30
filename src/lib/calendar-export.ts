@@ -101,42 +101,71 @@ function formatDateForGoogle(dateStr: string): string {
 }
 
 export function parseTournamentDateRange(dateStr: string): { startDate: Date; endDate: Date } {
-  // Tournament dates are in format like "January 15-17 2025" or "Feb 20 2025"
+  // Tournament dates are in format like "January 15-17 2025" or "Feb 20 2025" or "Dec 28 - Jan 4"
   const cleaned = dateStr.trim();
 
   // Try to extract year
   const yearMatch = cleaned.match(/\d{4}/);
-  const year = yearMatch ? yearMatch[0] : new Date().getFullYear().toString();
+  const baseYear = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear();
 
-  // Try to extract month
+  // Try to extract months (may be one or two)
   const monthNames = ['january', 'february', 'march', 'april', 'may', 'june',
                       'july', 'august', 'september', 'october', 'november', 'december'];
   const lowerCleaned = cleaned.toLowerCase();
-  let month = '01';
+  const foundMonths: Array<{ idx: number; pos: number; day?: number }> = [];
 
   for (let i = 0; i < monthNames.length; i++) {
-    if (lowerCleaned.includes(monthNames[i]) || lowerCleaned.includes(monthNames[i].slice(0, 3))) {
-      month = (i + 1).toString().padStart(2, '0');
-      break;
+    const fullName = monthNames[i];
+    const shortName = fullName.slice(0, 3);
+    const regex = new RegExp(`\\b(${fullName}|${shortName})\\b`, 'gi');
+    let match;
+    while ((match = regex.exec(cleaned)) !== null) {
+      const pos = match.index;
+      // Try to extract day number after this month (e.g., "Dec 28" or "Dec28")
+      const afterMatch = cleaned.slice(pos + match[0].length).match(/^\s*(\d{1,2})/);
+      const day = afterMatch ? parseInt(afterMatch[1], 10) : undefined;
+      foundMonths.push({ idx: i, pos, day });
     }
   }
 
-  // Extract day range (e.g., "15-17", "15 - 17", or just "20")
-  const dayRangeMatch = cleaned.match(/(\d{1,2})(?:\s*-\s*(\d{1,2}))?/);
+  // Sort by position in string
+  foundMonths.sort((a, b) => a.pos - b.pos);
 
-  if (dayRangeMatch) {
-    const startDay = dayRangeMatch[1].padStart(2, '0');
-    const endDay = dayRangeMatch[2] ? dayRangeMatch[2].padStart(2, '0') : startDay;
+  const startMonthData = foundMonths[0] ?? { idx: 0, pos: 0, day: undefined };
+  const endMonthData = foundMonths.length > 1 ? foundMonths[1] : startMonthData;
+  const startMonthIdx = startMonthData.idx;
+  const endMonthIdx = endMonthData.idx;
+  const startMonth = (startMonthIdx + 1).toString().padStart(2, '0');
+  const endMonth = (endMonthIdx + 1).toString().padStart(2, '0');
 
-    const startDate = new Date(`${year}-${month}-${startDay}`);
-    const endDate = new Date(`${year}-${month}-${endDay}`);
+  // If end month is earlier than start month (or Dec -> Jan), increment year for end date
+  const endYear = (endMonthIdx < startMonthIdx || (startMonthIdx === 11 && endMonthIdx === 0)) 
+    ? baseYear + 1 
+    : baseYear;
 
-    return { startDate, endDate };
+  // Extract days - use day from month data if available, otherwise fall back to regex
+  let startDay: string;
+  let endDay: string;
+
+  if (startMonthData.day !== undefined && endMonthData.day !== undefined) {
+    startDay = startMonthData.day.toString().padStart(2, '0');
+    endDay = endMonthData.day.toString().padStart(2, '0');
+  } else {
+    // Fallback to original regex approach
+    const dayRangeMatch = cleaned.match(/(\d{1,2})(?:\s*-\s*(\d{1,2}))?/);
+    if (dayRangeMatch) {
+      startDay = dayRangeMatch[1].padStart(2, '0');
+      endDay = dayRangeMatch[2] ? dayRangeMatch[2].padStart(2, '0') : startDay;
+    } else {
+      startDay = startMonthData.day?.toString().padStart(2, '0') ?? '01';
+      endDay = endMonthData.day?.toString().padStart(2, '0') ?? '01';
+    }
   }
 
-  // Fallback
-  const fallbackDate = new Date(`${year}-${month}-01`);
-  return { startDate: fallbackDate, endDate: fallbackDate };
+  const startDate = new Date(`${baseYear}-${startMonth}-${startDay}`);
+  const endDate = new Date(`${endYear}-${endMonth}-${endDay}`);
+
+  return { startDate, endDate };
 }
 
 function escapeICalText(text: string): string {
