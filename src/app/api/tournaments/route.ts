@@ -4,8 +4,8 @@ export async function GET() {
   const sheetId = '1R9s3MAh1H_7rJ9NQhO18p6o7bvekrIDTk27l7emXk6o';
   const apiKey = process.env.SHEETS_API_KEY;
   const ranges = [
-    { label: '2025', value: '2025!A7:K1000' },
-    { label: '2026', value: '2026!A7:K1000' }
+    { label: '2026', value: '2026!A7:K1000' },
+    { label: '2027', value: '2027!A7:K1000' }
   ];
   
   const headerMap: { [key: string]: string } = {
@@ -60,7 +60,7 @@ export async function GET() {
 
               if (propertyName === 'date') {
                 const trimmed = value.trim();
-                if (trimmed && !/(2025|2026)$/.test(trimmed)) {
+                if (trimmed && !/(2026|2027)$/.test(trimmed)) {
                   value = `${trimmed} ${label}`;
                 }
               }
