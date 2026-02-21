@@ -101,69 +101,49 @@ function formatDateForGoogle(dateStr: string): string {
 }
 
 export function parseTournamentDateRange(dateStr: string): { startDate: Date; endDate: Date } {
-  // Tournament dates are in format like "January 15-17 2025" or "Feb 20 2025" or "Dec 28 - Jan 4"
   const cleaned = dateStr.trim();
 
-  // Try to extract year
-  const yearMatch = cleaned.match(/\d{4}/);
-  const baseYear = yearMatch ? parseInt(yearMatch[0], 10) : new Date().getFullYear();
+  // Extract year
+  const yearMatch = cleaned.match(/\b(20\d{2})\b/);
+  const baseYear = yearMatch ? parseInt(yearMatch[1]) : new Date().getFullYear();
 
-  // Try to extract months (may be one or two)
-  const monthNames = ['january', 'february', 'march', 'april', 'may', 'june',
-                      'july', 'august', 'september', 'october', 'november', 'december'];
-  const lowerCleaned = cleaned.toLowerCase();
-  const foundMonths: Array<{ idx: number; pos: number; day?: number }> = [];
+  // Remove year so its digits don't get mistaken for a day number
+  const withoutYear = cleaned.replace(/\b20\d{2}\b/g, '').replace(/\s+/g, ' ').trim();
 
-  for (let i = 0; i < monthNames.length; i++) {
-    const fullName = monthNames[i];
-    const shortName = fullName.slice(0, 3);
-    const regex = new RegExp(`\\b(${fullName}|${shortName})\\b`, 'gi');
-    let match;
-    while ((match = regex.exec(cleaned)) !== null) {
-      const pos = match.index;
-      // Try to extract day number after this month (e.g., "Dec 28" or "Dec28")
-      const afterMatch = cleaned.slice(pos + match[0].length).match(/^\s*(\d{1,2})/);
-      const day = afterMatch ? parseInt(afterMatch[1], 10) : undefined;
-      foundMonths.push({ idx: i, pos, day });
-    }
+  const MONTHS: Record<string, number> = {
+    jan: 1, january: 1, feb: 2, february: 2, mar: 3, march: 3,
+    apr: 4, april: 4, may: 5, jun: 6, june: 6, jul: 7, july: 7,
+    aug: 8, august: 8, sep: 9, sept: 9, september: 9,
+    oct: 10, october: 10, nov: 11, november: 11, dec: 12, december: 12,
+  };
+
+  const MONTH_RE = /\b(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)\b/i;
+  const DAY_RE = /\b(\d{1,2})(?:st|nd|rd|th)?\b/;
+
+  function parsePart(part: string): { month: number | null; day: number | null } {
+    const monthMatch = part.match(MONTH_RE);
+    const month = monthMatch ? (MONTHS[monthMatch[1].toLowerCase()] ?? null) : null;
+    const dayMatch = part.match(DAY_RE);
+    const day = dayMatch ? parseInt(dayMatch[1]) : null;
+    return { month, day };
   }
 
-  // Sort by position in string
-  foundMonths.sort((a, b) => a.pos - b.pos);
+  // Split into start / end on the first dash
+  const dashMatch = withoutYear.match(/^(.+?)\s*-\s*(.+)$/);
+  const startParsed = parsePart(dashMatch ? dashMatch[1].trim() : withoutYear);
+  const endParsed   = dashMatch ? parsePart(dashMatch[2].trim()) : null;
 
-  const startMonthData = foundMonths[0] ?? { idx: 0, pos: 0, day: undefined };
-  const endMonthData = foundMonths.length > 1 ? foundMonths[1] : startMonthData;
-  const startMonthIdx = startMonthData.idx;
-  const endMonthIdx = endMonthData.idx;
-  const startMonth = (startMonthIdx + 1).toString().padStart(2, '0');
-  const endMonth = (endMonthIdx + 1).toString().padStart(2, '0');
+  // Inherit month if one part is missing it
+  const startMonth = startParsed.month ?? endParsed?.month ?? 1;
+  const endMonth   = endParsed?.month ?? startParsed.month ?? 1;
+  const startDay   = startParsed.day ?? 1;
+  const endDay     = endParsed?.day ?? startParsed.day ?? 1;
 
-  // If end month is earlier than start month (or Dec -> Jan), increment year for end date
-  const endYear = (endMonthIdx < startMonthIdx || (startMonthIdx === 11 && endMonthIdx === 0)) 
-    ? baseYear + 1 
-    : baseYear;
+  // Cross-year: if end month is before start month, end is next year
+  const endYear = endMonth < startMonth ? baseYear + 1 : baseYear;
 
-  // Extract days - use day from month data if available, otherwise fall back to regex
-  let startDay: string;
-  let endDay: string;
-
-  if (startMonthData.day !== undefined && endMonthData.day !== undefined) {
-    startDay = startMonthData.day.toString().padStart(2, '0');
-    endDay = endMonthData.day.toString().padStart(2, '0');
-  } else {
-    // Fallback to original regex approach
-    const dayRangeMatch = cleaned.match(/(\d{1,2})(?:\s*-\s*(\d{1,2}))?/);
-    if (dayRangeMatch) {
-      startDay = dayRangeMatch[1].padStart(2, '0');
-      endDay = dayRangeMatch[2] ? dayRangeMatch[2].padStart(2, '0') : startDay;
-    } else {
-      startDay = startMonthData.day?.toString().padStart(2, '0') ?? '01';
-      endDay = endMonthData.day?.toString().padStart(2, '0') ?? '01';
-    }
-  }
-
-  const startDate = new Date(`${baseYear}-${startMonth}-${startDay}`);
-  const endDate = new Date(`${endYear}-${endMonth}-${endDay}`);
+  const startDate = new Date(baseYear, startMonth - 1, startDay);
+  const endDate   = new Date(endYear, endMonth - 1, endDay);
 
   return { startDate, endDate };
 }
