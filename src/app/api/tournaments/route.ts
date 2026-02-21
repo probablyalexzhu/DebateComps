@@ -3,9 +3,13 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   const sheetId = '1R9s3MAh1H_7rJ9NQhO18p6o7bvekrIDTk27l7emXk6o';
   const apiKey = process.env.SHEETS_API_KEY;
+
+  // Dynamically generate ranges for current year and next year
+  const currentYear = new Date().getFullYear();
+  const nextYear = currentYear + 1;
   const ranges = [
-    { label: '2026', value: '2026!A7:K1000' },
-    { label: '2027', value: '2027!A7:K1000' }
+    { label: currentYear.toString(), value: `${currentYear}!A7:K1000` },
+    { label: nextYear.toString(), value: `${nextYear}!A7:K1000` }
   ];
   
   const headerMap: { [key: string]: string } = {
@@ -60,7 +64,8 @@ export async function GET() {
 
               if (propertyName === 'date') {
                 const trimmed = value.trim();
-                if (trimmed && !/(2026|2027)$/.test(trimmed)) {
+                // Check if the date already ends with a year number
+                if (trimmed && !/\d{4}$/.test(trimmed)) {
                   value = `${trimmed} ${label}`;
                 }
               }
