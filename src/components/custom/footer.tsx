@@ -12,7 +12,16 @@ export function Footer() {
           >
             Global Debating Spreadsheet
           </a>
-          . Made by Alex Zhu, Aditya Keerthi, Barton Lu
+          . Made by{" "}
+          <a
+            href="https://probablyalex.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-4"
+          >
+            Alex Zhu
+          </a>
+          , Aditya Keerthi, Barton Lu
         </p>
       </div>
     </footer>
