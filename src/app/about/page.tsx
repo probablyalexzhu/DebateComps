@@ -17,7 +17,7 @@ export default function AboutPage() {
           . Fill in the information for the tournament following the format of the other tournaments.
         </p>
         <p className="text-lg text-muted-foreground leading-relaxed">
-          This site is built by Alex Zhu, Aditya Keerthi, and Barton Lu to make
+          This site is built by <a href="https://probablyalex.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Alex Zhu</a>, Aditya Keerthi, and Barton Lu to make
           it easier for the debate community to discover opportunities from around the world.
         </p>
       </div>

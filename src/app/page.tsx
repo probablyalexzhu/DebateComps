@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import Image from "next/image";
 import { EventCard } from "@/components/custom/event-card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Grid3x3, Calendar as CalendarIcon } from "lucide-react";
@@ -102,20 +101,8 @@ export default function Home() {
     return (
       <div className="bg-background overflow-y-scroll">
         <div className="container mx-auto px-4 py-8">
-          <header className="mb-8 relative h-56">
-            {/* Background image - behind text */}
-            <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none hidden md:block">
-              <Image 
-                src="/banner.png" 
-                alt="Banner" 
-                width={400} 
-                height={200}
-                className="object-contain"
-              />
-            </div>
-            
-            {/* Text - in front */}
-            <div className="relative z-10 flex flex-col justify-center h-full">
+          <header className="mb-8">
+            <div className="flex flex-col justify-center py-8">
               <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
@@ -132,20 +119,8 @@ export default function Home() {
     return (
       <div className="bg-background overflow-y-scroll">
         <div className="container mx-auto px-4 py-8">
-          <header className="mb-8 relative h-56">
-            {/* Background image - behind text */}
-            <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none hidden md:block">
-              <Image 
-                src="/banner.png" 
-                alt="Banner" 
-                width={400} 
-                height={200}
-                className="object-contain"
-              />
-            </div>
-            
-            {/* Text - in front */}
-            <div className="relative z-10 flex flex-col justify-center h-full">
+          <header className="mb-8">
+            <div className="flex flex-col justify-center py-8">
               <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
@@ -164,20 +139,8 @@ export default function Home() {
   return (
     <div className="bg-background">
       <div className="container mx-auto px-4 py-8">
-        <header className="mb-8 relative h-56">
-          {/* Background image - behind text */}
-          <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none hidden md:block">
-            <Image 
-              src="/banner.png" 
-              alt="Banner" 
-              width={400} 
-              height={200}
-              className="object-contain"
-            />
-          </div>
-          
-          {/* Text - in front */}
-          <div className="relative z-10 flex flex-col justify-center h-full">
+        <header className="mb-8">
+          <div className="flex flex-col justify-center py-8">
             <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
             <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
           </div>
