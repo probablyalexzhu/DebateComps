@@ -192,6 +192,19 @@
   }
 }
 
+@keyframes spin-logo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.logo-spin:hover {
+  animation: spin-logo 1s;
+}
+
 /* React Big Calendar Custom Styles */
 .rbc-calendar {
   background-color: var(--card) !important;
