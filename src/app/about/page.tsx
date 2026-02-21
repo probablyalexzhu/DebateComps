@@ -20,6 +20,9 @@ export default function AboutPage() {
           This site is built by <a href="https://probablyalex.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Alex Zhu</a>, Aditya Keerthi, and Barton Lu to make
           it easier for the debate community to discover opportunities from around the world.
         </p>
+        <p className="text-lg text-muted-foreground leading-relaxed">
+          Check out the <a href="https://github.com/probablyalexzhu/DebateComps" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">GitHub repository</a>.
+        </p>
       </div>
     </div>
   );
