@@ -104,7 +104,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8">
           <header className="mb-8 relative h-56">
             {/* Background image - behind text */}
-            <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none">
+            <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none hidden md:block">
               <Image 
                 src="/banner.png" 
                 alt="Banner" 
@@ -134,7 +134,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8">
           <header className="mb-8 relative h-56">
             {/* Background image - behind text */}
-            <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none">
+            <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none hidden md:block">
               <Image 
                 src="/banner.png" 
                 alt="Banner" 
@@ -166,7 +166,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <header className="mb-8 relative h-56">
           {/* Background image - behind text */}
-          <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none">
+          <div className="absolute right-0 top-0 opacity-70 z-0 pointer-events-none hidden md:block">
             <Image 
               src="/banner.png" 
               alt="Banner" 
