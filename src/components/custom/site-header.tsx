@@ -6,7 +6,6 @@ import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader() {
   const navItems = [
-    { href: "/", label: "Home" },
     { href: "/saved", label: "Saved" },
     { href: "/about", label: "About" },
   ];
