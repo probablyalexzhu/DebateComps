@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { EventCard } from "@/components/custom/event-card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Grid3x3, Calendar as CalendarIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, Grid3x3, Calendar as CalendarIcon, RefreshCw } from "lucide-react";
 import { Tournament } from "@/types/tournament";
 import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-bar";
 import { CalendarView } from "@/components/custom/calendar-view";
@@ -19,6 +19,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const [filters, setFilters] = useState<FilterState>({
     searchText: "",
@@ -80,21 +81,30 @@ export default function Home() {
     setCurrentPage(1);
   }
 
+  const fetchTournaments = async (bypassCache = false) => {
+    setIsRefreshing(true);
+    try {
+      const url = bypassCache
+        ? `/api/tournaments?t=${Date.now()}`
+        : '/api/tournaments';
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setTournaments(data.tournaments);
+        setError(null);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch tournaments');
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
   useEffect(() => {
-    fetch('/api/tournaments')
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setTournaments(data.tournaments);
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        setError(err.message);
-        setLoading(false);
-      });
+    fetchTournaments();
   }, []);
 
   if (loading) {
@@ -147,36 +157,47 @@ export default function Home() {
         </header>
 
         <SearchFilterBar filters={filters} onFiltersChange={handleFiltersChange} />
-        
-        <div className="flex gap-2 mb-6 border-b">
-          <button
-            onClick={() => setViewMode('grid')}
-            className={cn(
-              "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
-              viewMode === 'grid'
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            )}
+
+        <div className="flex items-center justify-between gap-2 mb-6 border-b">
+          <div className="flex gap-2">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={cn(
+                "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
+                viewMode === 'grid'
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <div className="flex items-center gap-2">
+                <Grid3x3 className="h-4 w-4" />
+                Grid View
+              </div>
+            </button>
+            <button
+              onClick={() => setViewMode('calendar')}
+              className={cn(
+                "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
+                viewMode === 'calendar'
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <div className="flex items-center gap-2">
+                <CalendarIcon className="h-4 w-4" />
+                Calendar View
+              </div>
+            </button>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => fetchTournaments(true)}
+            disabled={isRefreshing}
+            className="text-muted-foreground hover:text-foreground"
           >
-            <div className="flex items-center gap-2">
-              <Grid3x3 className="h-4 w-4" />
-              Grid View
-            </div>
-          </button>
-          <button
-            onClick={() => setViewMode('calendar')}
-            className={cn(
-              "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
-              viewMode === 'calendar'
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <CalendarIcon className="h-4 w-4" />
-              Calendar View
-            </div>
-          </button>
+            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
+          </Button>
         </div>
 
         {viewMode === 'grid' ? (

@@ -88,7 +88,13 @@ export async function GET() {
     );
 
     const tournaments = results.flat();
-    return NextResponse.json({ tournaments });
+    const response = NextResponse.json({ tournaments });
+
+    // Cache for 1 hour (3600 seconds) on the server
+    // stale-while-revalidate allows serving stale data for up to 24 hours while revalidating in background
+    response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+
+    return response;
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Failed to fetch data' }, { status: 500 });
   }
