@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader() {
   const navItems = [
@@ -15,7 +18,7 @@ export function SiteHeader() {
         <Link href="/" className="text-lg font-semibold">
           DebateComps
         </Link>
-        <nav className="flex gap-6 text-sm font-medium text-muted-foreground">
+        <nav className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -25,6 +28,7 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <ThemeToggle />
         </nav>
       </div>
     </header>
