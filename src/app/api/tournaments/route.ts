@@ -15,6 +15,7 @@ export async function GET() {
   const headerMap: { [key: string]: string } = {
     'Competition Name': 'competitionName',
     'Online/In Person': 'location',
+    'Location': 'location',
     'Format': 'format',
     'Date': 'date',
     'Timezone': 'timezone',
@@ -54,6 +55,10 @@ export async function GET() {
           })
           .map(row => {
             const tournament: any = {};
+            // Ensure all expected fields default to empty string
+            const expectedFields = Object.values(headerMap);
+            expectedFields.forEach(field => { tournament[field] = ''; });
+
             headerRow.forEach((header, i) => {
               const propertyName = headerMap[header] || header;
               let value = row[i] || '';

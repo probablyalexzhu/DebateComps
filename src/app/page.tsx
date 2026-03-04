@@ -34,20 +34,20 @@ export default function Home() {
       // Search text filter (searches both competitionName and location)
       if (filters.searchText) {
         const searchLower = filters.searchText.toLowerCase()
-        const matchesName = tournament.competitionName.toLowerCase().includes(searchLower)
-        const matchesLocation = tournament.location.toLowerCase().includes(searchLower)
+        const matchesName = (tournament.competitionName || '').toLowerCase().includes(searchLower)
+        const matchesLocation = (tournament.location || '').toLowerCase().includes(searchLower)
         if (!matchesName && !matchesLocation) return false
       }
 
       // Online/In-person filter
       if (filters.isOnline !== null) {
-        const isOnline = tournament.location.toLowerCase().includes("online")
+        const isOnline = (tournament.location || '').toLowerCase().includes("online")
         if (filters.isOnline !== isOnline) return false
       }
 
       // Format filter (checks if format contains BP or AP)
       if (filters.format) {
-        if (!tournament.format.toUpperCase().includes(filters.format)) return false
+        if (!(tournament.format || '').toUpperCase().includes(filters.format)) return false
       }
 
       // Team cap range filter

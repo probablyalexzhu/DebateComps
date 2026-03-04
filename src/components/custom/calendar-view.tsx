@@ -119,7 +119,7 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
             views={['month', 'week', 'day', 'agenda']}
             popup
             eventPropGetter={(event: CalendarEvent) => {
-              const isOnline = event.resource.location.toLowerCase().includes('online')
+              const isOnline = (event.resource.location || '').toLowerCase().includes('online')
               return {
                 className: isOnline ? 'rbc-event-online' : 'rbc-event-inperson',
               }

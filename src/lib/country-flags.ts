@@ -90,6 +90,7 @@ const countryFlags: Record<string, string> = {
   }
   
   export function getCountryFlag(location: string): string {
+    if (!location) return "🌍"
     // Check if location contains "online" (case insensitive)
     if (location.toLowerCase().includes("online")) {
       return "💻"

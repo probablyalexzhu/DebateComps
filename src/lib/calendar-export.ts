@@ -5,10 +5,10 @@ export function generateGoogleCalendarUrl(tournament: Tournament): string {
 
   const params = new URLSearchParams({
     action: 'TEMPLATE',
-    text: tournament.competitionName,
-    dates: formatDateForGoogle(tournament.date),
+    text: tournament.competitionName || 'Unknown Tournament',
+    dates: formatDateForGoogle(tournament.date || ''),
     details: generateEventDetails(tournament),
-    location: tournament.location !== 'Online' ? tournament.location : 'Online Event',
+    location: (tournament.location && tournament.location !== 'Online') ? tournament.location : 'Online Event',
   });
 
   return `${baseUrl}?${params.toString()}`;
@@ -17,7 +17,7 @@ export function generateGoogleCalendarUrl(tournament: Tournament): string {
 export function generateICalFile(tournaments: Tournament[]): string {
   const events = tournaments.map(tournament => {
     const details = generateEventDetails(tournament);
-    const { startDate, endDate } = parseTournamentDateRange(tournament.date);
+    const { startDate, endDate } = parseTournamentDateRange(tournament.date || '');
 
     // Add 1 day to end date because iCal uses exclusive end dates for all-day events
     const adjustedEndDate = new Date(endDate);
@@ -28,11 +28,11 @@ export function generateICalFile(tournaments: Tournament[]): string {
 
     return [
       'BEGIN:VEVENT',
-      `SUMMARY:${escapeICalText(tournament.competitionName)}`,
+      `SUMMARY:${escapeICalText(tournament.competitionName || 'Unknown Tournament')}`,
       `DTSTART;VALUE=DATE:${startDateStr}`,
       `DTEND;VALUE=DATE:${endDateStr}`,
       `DESCRIPTION:${escapeICalText(details)}`,
-      `LOCATION:${escapeICalText(tournament.location !== 'Online' ? tournament.location : 'Online Event')}`,
+      `LOCATION:${escapeICalText((tournament.location && tournament.location !== 'Online') ? tournament.location : 'Online Event')}`,
       'END:VEVENT',
     ].join('\r\n');
   }).join('\r\n');
@@ -101,6 +101,7 @@ function formatDateForGoogle(dateStr: string): string {
 }
 
 export function parseTournamentDateRange(dateStr: string): { startDate: Date; endDate: Date } {
+  if (!dateStr) return { startDate: new Date(), endDate: new Date() };
   const cleaned = dateStr.trim();
 
   // Extract year

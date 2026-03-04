@@ -17,11 +17,11 @@ function formatDateRange(dateStr: string): string {
 
 function buildClipboardSection(tournament: Tournament): string {
   const details = generateEventDetails(tournament)
-  const location = tournament.location !== 'Online' ? tournament.location : 'Online Event'
+  const location = (tournament.location && tournament.location !== 'Online') ? tournament.location : 'Online Event'
 
   return [
-    `Competition: ${tournament.competitionName}`,
-    `Dates: ${formatDateRange(tournament.date)}`,
+    `Competition: ${tournament.competitionName || 'Unknown'}`,
+    `Dates: ${formatDateRange(tournament.date || '')}`,
     `Location: ${location}`,
     details ? `${details}` : null,
   ]

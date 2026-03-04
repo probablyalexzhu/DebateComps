@@ -42,7 +42,7 @@ export default function SavedPage() {
     const updateSavedTournaments = () => {
       const savedIds = getSavedTournaments()
       const filtered = tournaments.filter((tournament) => {
-        const tournamentId = `${tournament.competitionName}-${tournament.date}`
+        const tournamentId = `${tournament.competitionName || ''}-${tournament.date || ''}`
           .replace(/\s+/g, '-')
           .toLowerCase()
         return savedIds.has(tournamentId)
