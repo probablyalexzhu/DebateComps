@@ -117,7 +117,7 @@ export function EventCard({ tournament }: EventCardProps) {
 
             <div className="flex items-start gap-2 text-muted-foreground">
               <Gavel className="h-4 w-4 shrink-0 mt-0.5" />
-              <span className="leading-relaxed">
+              <span className="leading-relaxed truncate">
                 {tournament.judgeRule}
               </span>
             </div>
@@ -133,7 +133,7 @@ export function EventCard({ tournament }: EventCardProps) {
             </Button>
           ) : (
             <Button className="flex-1 opacity-50 cursor-not-allowed" disabled>
-              Coming Soon
+              Reg TBA
             </Button>
           )}
           {tournament.infoLink && tournament.infoLink !== "TBA" && tournament.infoLink.trim() !== "" ? (

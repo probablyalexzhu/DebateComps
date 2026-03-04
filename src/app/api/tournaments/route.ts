@@ -75,12 +75,16 @@ export async function GET() {
                 }
               }
 
-              if (propertyName === 'regLink') {
-                value = value.replace(/^(Teamreg|Team Reg|Team reg|Teams|Registration|Reg|Link):\s*/i, '');
-                value = value.split(/\s+/)[0];
-                if (value && !value.match(/^https?:\/\//) && !value.match(/^bit\.ly\/|^tinyurl\.com\/|^t\.co\//)) {
-                  if (value.includes('.')) {
-                    value = 'https://' + value;
+              if (propertyName === 'regLink' || propertyName === 'infoLink') {
+                // Extract the first URL from the cell, ignoring surrounding text
+                const urlMatch = value.match(/https?:\/\/[^\s)>\]]+/);
+                if (urlMatch) {
+                  value = urlMatch[0];
+                } else {
+                  // Try to find a bare domain (e.g. bit.ly/abc, forms.gle/abc)
+                  const bareMatch = value.match(/(?:bit\.ly|tinyurl\.com|t\.co|forms\.gle|docs\.google\.com|[\w-]+\.[\w.]+)\/[^\s)>\]]+/);
+                  if (bareMatch) {
+                    value = 'https://' + bareMatch[0];
                   }
                 }
               }
