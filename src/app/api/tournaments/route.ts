@@ -1,17 +1,50 @@
 import { NextResponse } from 'next/server';
 
+interface CellData {
+  formattedValue?: string;
+  hyperlink?: string;
+  textFormatRuns?: { format?: { link?: { uri?: string } }; startIndex?: number }[];
+}
+
+function extractCellValue(cell: CellData | undefined): string {
+  return cell?.formattedValue || '';
+}
+
+function extractCellLink(cell: CellData | undefined): string {
+  if (!cell) return '';
+
+  // 1. Single hyperlink on the whole cell
+  if (cell.hyperlink) return cell.hyperlink;
+
+  // 2. Multiple hyperlinks — grab the first one from textFormatRuns
+  if (cell.textFormatRuns) {
+    for (const run of cell.textFormatRuns) {
+      if (run.format?.link?.uri) return run.format.link.uri;
+    }
+  }
+
+  // 3. Fall back to extracting a URL from the display text
+  const text = cell.formattedValue || '';
+  const urlMatch = text.match(/https?:\/\/[^\s)>\]]+/);
+  if (urlMatch) return urlMatch[0];
+
+  const bareMatch = text.match(/(?:bit\.ly|tinyurl\.com|t\.co|forms\.gle|docs\.google\.com|[\w-]+\.[\w.]+)\/[^\s)>\]]+/);
+  if (bareMatch) return 'https://' + bareMatch[0];
+
+  return text;
+}
+
 export async function GET() {
   const sheetId = '1R9s3MAh1H_7rJ9NQhO18p6o7bvekrIDTk27l7emXk6o';
   const apiKey = process.env.SHEETS_API_KEY;
 
-  // Dynamically generate ranges for current year and next year
   const currentYear = new Date().getFullYear();
   const nextYear = currentYear + 1;
   const ranges = [
-    { label: currentYear.toString(), value: `${currentYear}!A7:K1000` },
-    { label: nextYear.toString(), value: `${nextYear}!A7:K1000` }
+    { label: currentYear.toString(), range: `${currentYear}!A7:K1000` },
+    { label: nextYear.toString(), range: `${nextYear}!A7:K1000` }
   ];
-  
+
   const headerMap: { [key: string]: string } = {
     'Competition Name': 'competitionName',
     'Online/In Person': 'location',
@@ -26,11 +59,14 @@ export async function GET() {
     'Team Cap': 'teamCap',
     'Info Link': 'infoLink'
   };
-  
+
+  const linkFields = new Set(['regLink', 'infoLink']);
+
   try {
     const results = await Promise.all(
-      ranges.map(async ({ value: range, label }) => {
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
+      ranges.map(async ({ range, label }) => {
+        const fields = 'sheets(data(rowData(values(formattedValue,hyperlink,textFormatRuns(format(link(uri)),startIndex)))))';
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?ranges=${encodeURIComponent(range)}&fields=${encodeURIComponent(fields)}&key=${apiKey}`;
         const res = await fetch(url);
         const json = await res.json();
 
@@ -38,30 +74,45 @@ export async function GET() {
           throw new Error(`API Error (${range}): ${json.error?.message || 'Unknown error'}`);
         }
 
-        const [headerRow, ...rows] = (json.values as string[][]) || [];
-        if (!headerRow) return [];
+        const rowData: { values?: CellData[] }[] = json.sheets?.[0]?.data?.[0]?.rowData || [];
+        if (rowData.length === 0) return [];
 
-        return rows
+        // First row is the header
+        const headerCells = rowData[0].values || [];
+        const headerRow = headerCells.map(cell => cell.formattedValue || '');
+        const dataRows = rowData.slice(1);
+
+        return dataRows
           .filter(row => {
-            if (!row || row.length === 0) return false;
-            if (row.every(cell => !cell || cell.trim() === '')) return false;
+            const cells = row.values || [];
+            if (cells.length === 0) return false;
 
-            const filledCells = row.filter(cell => cell && cell.trim() !== '');
-            if (filledCells.length === 1) return false;
+            const filledCells = cells.filter(c => c.formattedValue && c.formattedValue.trim() !== '');
+            if (filledCells.length <= 1) return false;
 
-            if (row[0] && headerRow.includes(row[0])) return false;
+            const firstVal = cells[0]?.formattedValue || '';
+            if (!firstVal.trim()) return false;
+            if (headerRow.includes(firstVal)) return false;
 
-            return row[0] && row[0].trim() !== '';
+            return true;
           })
           .map(row => {
+            const cells = row.values || [];
             const tournament: any = {};
+
             // Ensure all expected fields default to empty string
             const expectedFields = Object.values(headerMap);
             expectedFields.forEach(field => { tournament[field] = ''; });
 
             headerRow.forEach((header, i) => {
               const propertyName = headerMap[header] || header;
-              let value = row[i] || '';
+              let value: string;
+
+              if (linkFields.has(propertyName)) {
+                value = extractCellLink(cells[i]);
+              } else {
+                value = extractCellValue(cells[i]);
+              }
 
               if (propertyName === 'judgeRule' || propertyName === 'timezone') {
                 value = value.replace(/\s+/g, '');
@@ -69,23 +120,8 @@ export async function GET() {
 
               if (propertyName === 'date') {
                 const trimmed = value.trim();
-                // Check if the date already ends with a year number
                 if (trimmed && !/\d{4}$/.test(trimmed)) {
                   value = `${trimmed} ${label}`;
-                }
-              }
-
-              if (propertyName === 'regLink' || propertyName === 'infoLink') {
-                // Extract the first URL from the cell, ignoring surrounding text
-                const urlMatch = value.match(/https?:\/\/[^\s)>\]]+/);
-                if (urlMatch) {
-                  value = urlMatch[0];
-                } else {
-                  // Try to find a bare domain (e.g. bit.ly/abc, forms.gle/abc)
-                  const bareMatch = value.match(/(?:bit\.ly|tinyurl\.com|t\.co|forms\.gle|docs\.google\.com|[\w-]+\.[\w.]+)\/[^\s)>\]]+/);
-                  if (bareMatch) {
-                    value = 'https://' + bareMatch[0];
-                  }
                 }
               }
 
