@@ -70,19 +70,19 @@ export function EventCard({ tournament }: EventCardProps) {
     : 'N/A'
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col pt-0">
-      <div className="aspect-video bg-muted flex items-center justify-center text-6xl relative">
-        {flag}
-        <button
-          onClick={handleToggleSave}
-          className="absolute top-2 right-2 p-2 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors cursor-pointer"
-          aria-label={isSaved ? "Remove from saved" : "Save tournament"}
-        >
-          <Bookmark className={cn("h-5 w-5", isSaved && "fill-current")} />
-        </button>
-      </div>
-      <CardContent className="p-4 flex flex-col flex-1">
-        <div className="space-y-3 flex-1">
+    <Card className="overflow-hidden h-full flex flex-col pt-0 pb-0">
+      <CardContent className="p-5 flex flex-col flex-1">
+        <div className="space-y-4 flex-1">
+          <div className="flex items-start justify-between">
+            <span className="text-3xl">{flag}</span>
+            <button
+              onClick={handleToggleSave}
+              className="p-1 rounded-full hover:bg-muted transition-colors cursor-pointer shrink-0"
+              aria-label={isSaved ? "Remove from saved" : "Save tournament"}
+            >
+              <Bookmark className={cn("h-5 w-5", isSaved && "fill-current")} />
+            </button>
+          </div>
           <div className="flex items-start gap-2">
             <h3 className="font-semibold text-lg leading-tight flex-1 text-balance">{tournament.competitionName}</h3>
             <div className="flex gap-1 shrink-0">
@@ -95,7 +95,7 @@ export function EventCard({ tournament }: EventCardProps) {
             </div>
           </div>
 
-          <div className="space-y-2 text-sm">
+          <div className="space-y-3 text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4 shrink-0" />
               <span className="leading-relaxed">
@@ -124,7 +124,7 @@ export function EventCard({ tournament }: EventCardProps) {
           </div>
         </div>
 
-        <div className="flex gap-2 pt-2 mt-auto">
+        <div className="flex gap-2 pt-3 mt-auto">
           {tournament.regLink && tournament.regLink !== "TBA" && tournament.regLink.trim() !== "" ? (
             <Button asChild className="flex-1">
               <a href={tournament.regLink} target="_blank" rel="noopener noreferrer">

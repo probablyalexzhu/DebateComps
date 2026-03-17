@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 
+import { startOfWeek, endOfWeek, format, isWithinInterval } from "date-fns";
+
 import { EventCard } from "@/components/custom/event-card";
 import { Button } from "@/components/ui/button";
 import { Grid3x3, Calendar as CalendarIcon, RefreshCw } from "lucide-react";
@@ -9,10 +11,12 @@ import { Tournament } from "@/types/tournament";
 import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-bar";
 import { CalendarView } from "@/components/custom/calendar-view";
 import { cn } from "@/lib/utils";
+import { parseTournamentDateRange } from "@/lib/calendar-export";
 
 const ITEMS_PER_BATCH = 16;
 
 type ViewMode = 'grid' | 'calendar';
+type TournamentSection = { label: string; tournaments: Tournament[] };
 
 export default function Home() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -68,6 +72,57 @@ export default function Home() {
   const currentTournaments = filteredTournaments.slice(0, visibleCount);
   const hasMore = visibleCount < filteredTournaments.length;
 
+  const sections = useMemo<TournamentSection[]>(() => {
+    const now = new Date();
+    const weekStart = startOfWeek(now, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
+
+    const thisWeek: Tournament[] = [];
+    const monthGroups = new Map<string, Tournament[]>();
+    const MONTH_RE = /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i;
+    let prevStartDate: Date | null = null;
+
+    for (const t of currentTournaments) {
+      let startDate: Date;
+      const dateStr = t.date || '';
+      const hasMonth = MONTH_RE.test(dateStr);
+
+      try {
+        startDate = parseTournamentDateRange(dateStr).startDate;
+      } catch {
+        startDate = new Date();
+      }
+
+      // If no month was found in the date string, inherit month from previous card
+      if (!hasMonth && prevStartDate) {
+        startDate.setMonth(prevStartDate.getMonth());
+        startDate.setFullYear(prevStartDate.getFullYear());
+      }
+      prevStartDate = startDate;
+
+      if (isWithinInterval(startDate, { start: weekStart, end: weekEnd })) {
+        thisWeek.push(t);
+      } else {
+        const key = format(startDate, "MMMM yyyy");
+        const group = monthGroups.get(key);
+        if (group) {
+          group.push(t);
+        } else {
+          monthGroups.set(key, [t]);
+        }
+      }
+    }
+
+    const result: TournamentSection[] = [];
+    if (thisWeek.length > 0) {
+      result.push({ label: "This Week", tournaments: thisWeek });
+    }
+    for (const [label, tournaments] of monthGroups) {
+      result.push({ label, tournaments });
+    }
+    return result;
+  }, [currentTournaments]);
+
   const handleFiltersChange = (newFilters: FilterState) => {
     setFilters(newFilters);
     setVisibleCount(ITEMS_PER_BATCH);
@@ -121,7 +176,7 @@ export default function Home() {
       <div className="bg-background overflow-y-scroll">
         <div className="container mx-auto px-4 py-8">
           <header className="mb-8">
-            <div className="flex flex-col justify-center py-8">
+            <div className="flex flex-col justify-center py-6">
               <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
@@ -139,7 +194,7 @@ export default function Home() {
       <div className="bg-background overflow-y-scroll">
         <div className="container mx-auto px-4 py-8">
           <header className="mb-8">
-            <div className="flex flex-col justify-center py-8">
+            <div className="flex flex-col justify-center py-6">
               <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
@@ -159,7 +214,7 @@ export default function Home() {
     <div className="bg-background">
       <div className="container mx-auto px-4 py-8">
         <header className="mb-8">
-          <div className="flex flex-col justify-center py-8">
+          <div className="flex flex-col justify-center py-6">
             <h1 className="text-4xl font-bold mb-2">DebateComps - The home for debate</h1>
             <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
           </div>
@@ -211,11 +266,20 @@ export default function Home() {
 
         {viewMode === 'grid' ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-              {currentTournaments.map((tournament, index) => (
-                <EventCard key={`${tournament.competitionName}-${index}`} tournament={tournament} />
-              ))}
-            </div>
+            {sections.map((section) => (
+              <div key={section.label} className="mb-8">
+                <h2
+                  className="text-xl font-semibold mb-4 text-foreground"
+                >
+                  {section.label}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {section.tournaments.map((tournament, index) => (
+                    <EventCard key={`${section.label}-${tournament.competitionName}-${index}`} tournament={tournament} />
+                  ))}
+                </div>
+              </div>
+            ))}
 
             {hasMore && <div ref={sentinelRef} className="h-4" />}
           </>
