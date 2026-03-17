@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+
 import { EventCard } from "@/components/custom/event-card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Grid3x3, Calendar as CalendarIcon, RefreshCw } from "lucide-react";
+import { Grid3x3, Calendar as CalendarIcon, RefreshCw } from "lucide-react";
 import { Tournament } from "@/types/tournament";
 import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-bar";
 import { CalendarView } from "@/components/custom/calendar-view";
 import { cn } from "@/lib/utils";
 
-const ITEMS_PER_PAGE = 16;
+const ITEMS_PER_BATCH = 16;
 
 type ViewMode = 'grid' | 'calendar';
 
@@ -17,9 +18,10 @@ export default function Home() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_BATCH);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const [filters, setFilters] = useState<FilterState>({
     searchText: "",
@@ -63,23 +65,30 @@ export default function Home() {
     })
   }, [filters, tournaments])
 
-  const totalPages = Math.ceil(filteredTournaments.length / ITEMS_PER_PAGE)
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-  const endIndex = startIndex + ITEMS_PER_PAGE
-  const currentTournaments = filteredTournaments.slice(startIndex, endIndex)
-
-  const goToNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-  }
-
-  const goToPreviousPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1))
-  }
+  const currentTournaments = filteredTournaments.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredTournaments.length;
 
   const handleFiltersChange = (newFilters: FilterState) => {
     setFilters(newFilters);
-    setCurrentPage(1);
+    setVisibleCount(ITEMS_PER_BATCH);
   }
+
+  const sentinelRef = useCallback((node: HTMLDivElement | null) => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+    if (!node) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => prev + ITEMS_PER_BATCH);
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    observerRef.current.observe(node);
+  }, []);
 
   const fetchTournaments = async (bypassCache = false) => {
     setIsRefreshing(true);
@@ -208,23 +217,7 @@ export default function Home() {
               ))}
             </div>
 
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-4">
-                <Button variant="outline" onClick={goToPreviousPage} disabled={currentPage === 1}>
-                  <ChevronLeft className="h-4 w-4 mr-2" />
-                  Previous
-                </Button>
-
-                <span className="text-sm text-muted-foreground">
-                  Page {currentPage} of {totalPages}
-                </span>
-
-                <Button variant="outline" onClick={goToNextPage} disabled={currentPage === totalPages}>
-                  Next
-                  <ChevronRight className="h-4 w-4 ml-2" />
-                </Button>
-              </div>
-            )}
+            {hasMore && <div ref={sentinelRef} className="h-4" />}
           </>
         ) : (
           <CalendarView tournaments={filteredTournaments} />
