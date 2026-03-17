@@ -70,7 +70,7 @@ export function EventCard({ tournament }: EventCardProps) {
     : 'N/A'
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col pt-0">
+    <Card className="overflow-hidden h-full flex flex-col pt-0">
       <div className="aspect-video bg-muted flex items-center justify-center text-6xl relative">
         {flag}
         <button
