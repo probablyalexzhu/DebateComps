@@ -41,8 +41,8 @@ export async function GET() {
   const currentYear = new Date().getFullYear();
   const nextYear = currentYear + 1;
   const ranges = [
-    { label: currentYear.toString(), range: `${currentYear}!A7:K1000` },
-    { label: nextYear.toString(), range: `${nextYear}!A7:K1000` }
+    { label: currentYear.toString(), range: `${currentYear}!A1:K1000` },
+    { label: nextYear.toString(), range: `${nextYear}!A1:K1000` }
   ];
 
   const headerMap: { [key: string]: string } = {
@@ -77,10 +77,16 @@ export async function GET() {
         const rowData: { values?: CellData[] }[] = json.sheets?.[0]?.data?.[0]?.rowData || [];
         if (rowData.length === 0) return [];
 
-        // First row is the header
-        const headerCells = rowData[0].values || [];
+        // Find the header row by looking for a row containing "Competition Name"
+        const headerIndex = rowData.findIndex(row => {
+          const cells = row.values || [];
+          return cells.some(c => c.formattedValue === 'Competition Name');
+        });
+        if (headerIndex === -1) return [];
+
+        const headerCells = rowData[headerIndex].values || [];
         const headerRow = headerCells.map(cell => cell.formattedValue || '');
-        const dataRows = rowData.slice(1);
+        const dataRows = rowData.slice(headerIndex + 1);
 
         return dataRows
           .filter(row => {
