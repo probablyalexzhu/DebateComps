@@ -32,7 +32,8 @@ export default function Home() {
     isOnline: null,
     format: null,
     teamCapMin: 0,
-    teamCapMax: 200,
+    teamCapMax: 400,
+    oneDayOnly: false,
   })
 
   const filteredTournaments = useMemo(() => {
@@ -51,9 +52,24 @@ export default function Home() {
         if (filters.isOnline !== isOnline) return false
       }
 
-      // Format filter (checks if format contains BP or AP)
+      // Format filter
       if (filters.format) {
-        if (!(tournament.format || '').toUpperCase().includes(filters.format)) return false
+        const fmt = (tournament.format || '').toUpperCase()
+        if (filters.format === 'OTHER') {
+          if (fmt.includes('BP') || fmt.includes('AP')) return false
+        } else {
+          if (!fmt.includes(filters.format)) return false
+        }
+      }
+
+      // One-day tournament filter
+      if (filters.oneDayOnly) {
+        try {
+          const { startDate, endDate } = parseTournamentDateRange(tournament.date || '')
+          if (startDate.toDateString() !== endDate.toDateString()) return false
+        } catch {
+          return false
+        }
       }
 
       // Team cap range filter

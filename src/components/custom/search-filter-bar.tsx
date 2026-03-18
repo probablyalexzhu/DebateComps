@@ -15,6 +15,7 @@ export interface FilterState {
   format: string | null
   teamCapMin: number
   teamCapMax: number
+  oneDayOnly: boolean
 }
 
 interface SearchFilterBarProps {
@@ -51,13 +52,18 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
     })
   }
 
+  const handleOneDayChange = (checked: boolean) => {
+    onFiltersChange({ ...filters, oneDayOnly: checked })
+  }
+
   const handleClearFilters = () => {
     onFiltersChange({
       searchText: "",
       isOnline: null,
       format: null,
       teamCapMin: 0,
-      teamCapMax: 200,
+      teamCapMax: 400,
+      oneDayOnly: false,
     })
     setIsOpen(false)
   }
@@ -67,7 +73,8 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
     filters.isOnline !== null ||
     filters.format !== null ||
     filters.teamCapMin !== 0 ||
-    filters.teamCapMax !== 200
+    filters.teamCapMax !== 400 ||
+    filters.oneDayOnly
 
   return (
     <div className="space-y-4 mb-8">
@@ -109,7 +116,7 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
               )}
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-4">
               <div className="space-y-3">
                 <Label className="text-sm font-medium">Event Type</Label>
                 <RadioGroup
@@ -158,7 +165,29 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                       Asian Parliamentary
                     </Label>
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="OTHER" id="other" />
+                    <Label htmlFor="other" className="font-normal cursor-pointer">
+                      Other
+                    </Label>
+                  </div>
                 </RadioGroup>
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-sm font-medium">Duration</Label>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="one-day"
+                    checked={filters.oneDayOnly}
+                    onChange={(e) => handleOneDayChange(e.target.checked)}
+                    className="h-4 w-4 rounded border-border accent-primary cursor-pointer"
+                  />
+                  <Label htmlFor="one-day" className="font-normal cursor-pointer">
+                    One-day tournaments only
+                  </Label>
+                </div>
               </div>
 
               <div className="space-y-3">
@@ -168,7 +197,7 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                 <div className="pt-2">
                   <Slider
                     min={0}
-                    max={200}
+                    max={400}
                     step={10}
                     value={[filters.teamCapMin, filters.teamCapMax]}
                     onValueChange={handleTeamCapChange}
@@ -177,7 +206,7 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                 </div>
                 <div className="flex justify-between text-xs text-muted-foreground">
                   <span>0</span>
-                  <span>200</span>
+                  <span>400</span>
                 </div>
               </div>
             </div>
