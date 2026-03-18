@@ -23,7 +23,7 @@ export function SiteHeader() {
             height={32}
             className="h-8 w-8 logo-spin"
           />
-          <span className="hidden sm:inline">DebateComps</span>
+          <span className="hidden sm:inline font-serif tracking-tight">DebateComps</span>
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
           {navItems.map((item) => (
