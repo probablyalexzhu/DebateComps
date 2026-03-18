@@ -77,15 +77,15 @@ export function EventCard({ tournament }: EventCardProps) {
             <span className="text-3xl">{flag}</span>
             <button
               onClick={handleToggleSave}
-              className="p-1 rounded-full hover:bg-muted transition-colors cursor-pointer shrink-0"
+              className="-m-1.5 p-2.5 rounded-full hover:bg-muted transition-colors cursor-pointer shrink-0"
               aria-label={isSaved ? "Remove from saved" : "Save tournament"}
             >
               <Bookmark className={cn("h-5 w-5", isSaved && "fill-current")} />
             </button>
           </div>
-          <div className="flex items-start gap-2">
-            <h3 className="font-semibold text-lg leading-tight flex-1 text-balance">{tournament.competitionName}</h3>
-            <div className="flex gap-1 shrink-0">
+          <div>
+            <h3 className="font-semibold text-lg leading-tight text-balance">{tournament.competitionName}</h3>
+            <div className="flex gap-1 flex-wrap mt-2">
               <Badge variant="secondary" className={cn("text-xs", getFormatChipStyle(tournament.format))}>
                 {tournament.format}
               </Badge>
