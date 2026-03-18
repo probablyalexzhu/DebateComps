@@ -73,7 +73,7 @@ export function EventCard({ tournament }: EventCardProps) {
       <CardContent className="p-5 flex flex-col flex-1">
         <div className="space-y-4 flex-1">
           <div className="flex items-start justify-between">
-            <h3 className="font-semibold text-lg leading-tight text-balance">{tournament.competitionName} {flag}</h3>
+            <span className="text-2xl">{flag}</span>
             <button
               onClick={handleToggleSave}
               className="-m-1.5 p-2.5 ml-3 rounded-full hover:bg-muted transition-colors cursor-pointer shrink-0"
@@ -83,6 +83,7 @@ export function EventCard({ tournament }: EventCardProps) {
             </button>
           </div>
           <div>
+            <h3 className="font-semibold text-lg leading-tight text-balance">{tournament.competitionName}</h3>
             <div className="flex gap-1.5 flex-wrap items-center mt-2">
               <Badge variant="secondary" className={cn("text-xs", getFormatChipStyle(tournament.format))}>
                 {tournament.format}
