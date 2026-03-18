@@ -124,31 +124,31 @@ export function EventCard({ tournament }: EventCardProps) {
 
         <div className="flex gap-2 pt-3 mt-auto">
           {tournament.regLink && tournament.regLink !== "TBA" && tournament.regLink.trim() !== "" ? (
-            <Button asChild className="flex-1">
+            <Button asChild size="sm" className="flex-1">
               <a href={tournament.regLink} target="_blank" rel="noopener noreferrer">
                 Register
               </a>
             </Button>
           ) : (
-            <Button className="flex-1 opacity-50 cursor-not-allowed" disabled>
+            <Button size="sm" className="flex-1 opacity-50 cursor-not-allowed" disabled>
               Register
             </Button>
           )}
           {tournament.infoLink && tournament.infoLink !== "TBA" && tournament.infoLink.trim() !== "" ? (
-            <Button asChild variant="outline" className="flex-1 bg-transparent">
+            <Button asChild variant="outline" size="sm" className="flex-1 bg-transparent">
               <a href={tournament.infoLink} target="_blank" rel="noopener noreferrer">
                 More Info
               </a>
             </Button>
           ) : (
-            <Button variant="outline" className="flex-1 bg-transparent opacity-50 cursor-not-allowed" disabled>
+            <Button variant="outline" size="sm" className="flex-1 bg-transparent opacity-50 cursor-not-allowed" disabled>
               More Info
             </Button>
           )}
           <Button
             onClick={handleExportToGoogleCal}
             variant="outline"
-            size="icon"
+            size="sm"
             className="shrink-0 cursor-pointer"
             title="Add to Google Calendar"
           >
