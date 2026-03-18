@@ -186,6 +186,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    background-color: oklch(from var(--muted) l c h / 0.5);
+  }
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
