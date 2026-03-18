@@ -125,6 +125,9 @@
   --shadow-xl: 0px 4px 12px 2px hsl(35.0000 9.8361% 23.9216% / 0.10), 0px 8px 10px 1px hsl(35.0000 9.8361% 23.9216% / 0.10);
   --shadow-2xl: 0px 4px 12px 2px hsl(35.0000 9.8361% 23.9216% / 0.25);
   --tracking-normal: 0.025em;
+  --card-premier: oklch(0.97 0.02 75);
+  --card-wudc: oklch(0.96 0.02 200);
+  --card-large: oklch(0.96 0.015 25);
 }
 
 .dark {
@@ -180,6 +183,9 @@
   --shadow-lg: 0px 6px 16px 4px hsl(0 0% 0% / 0.40), 0px 4px 6px 3px hsl(0 0% 0% / 0.40);
   --shadow-xl: 0px 6px 16px 4px hsl(0 0% 0% / 0.40), 0px 8px 10px 3px hsl(0 0% 0% / 0.40);
   --shadow-2xl: 0px 6px 16px 4px hsl(0 0% 0% / 1.00);
+  --card-premier: oklch(0.26 0.012 75);
+  --card-wudc: oklch(0.26 0.012 200);
+  --card-large: oklch(0.26 0.008 25);
 }
 
 @layer base {
@@ -219,7 +225,7 @@
 }
 
 .dark .this-week-banner {
-  background-color: oklch(0.35 0.04 145);
+  background-color: oklch(0.25 0.04 145);
 }
 
 

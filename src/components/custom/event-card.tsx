@@ -22,6 +22,7 @@ interface Tournament {
   regLink: string
   timezone: string
   teamCap: string
+  category: string
 }
 
 interface EventCardProps {
@@ -56,10 +57,46 @@ export function EventCard({ tournament }: EventCardProps) {
     return 'bg-muted text-muted-foreground'
   }
 
+  const getCategoryChipStyle = (category: string) => {
+    switch (category) {
+      case 'premier': return 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700'
+      case 'wudc': return 'bg-cyan-100 text-cyan-800 border-cyan-300 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-700'
+      case 'large': return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800'
+      default: return ''
+    }
+  }
+
+  const getCategoryLabel = (category: string) => {
+    switch (category) {
+      case 'premier': return 'Premier Regional'
+      case 'wudc': return 'WUDC'
+      case 'large': return 'Large Comp'
+      default: return ''
+    }
+  }
+
   const getTeamCapChipStyle = (teamCap: string) => {
     const cap = parseInt(teamCap, 10)
     if (!isNaN(cap) && cap > 80) return 'bg-primary/10 text-primary border-primary/20'
     return 'bg-muted text-muted-foreground'
+  }
+
+  const getCardCategoryStyle = (category: string) => {
+    switch (category) {
+      case 'premier': return 'border-l-4 border-l-amber-400 !bg-(--card-premier)'
+      case 'wudc': return 'border-l-4 border-l-cyan-500 !bg-(--card-wudc)'
+      case 'large': return 'border-l-4 border-l-red-400 !bg-(--card-large)'
+      default: return ''
+    }
+  }
+
+  const getCategoryStripeColor = (category: string) => {
+    switch (category) {
+      case 'premier': return 'bg-amber-400'
+      case 'wudc': return 'bg-cyan-500'
+      case 'large': return 'bg-red-400'
+      default: return ''
+    }
   }
 
   // Get team cap display value
@@ -69,7 +106,7 @@ export function EventCard({ tournament }: EventCardProps) {
     : 'N/A'
 
   return (
-    <Card className="overflow-hidden h-full flex flex-col pt-0 pb-0 transition-transform duration-200 ease-out hover:-translate-y-0.5">
+    <Card className={cn("overflow-hidden h-full flex flex-col pt-0 pb-0 transition-transform duration-200 ease-out hover:-translate-y-0.5", getCardCategoryStyle(tournament.category))}>
       <CardContent className="p-5 flex flex-col flex-1">
         <div className="space-y-4 flex-1">
           <div className="flex items-start justify-between">
@@ -91,6 +128,11 @@ export function EventCard({ tournament }: EventCardProps) {
               <Badge variant="secondary" className={cn("text-xs", getTeamCapChipStyle(teamCapDisplay))}>
                 {teamCapDisplay}
               </Badge>
+              {tournament.category && (
+                <Badge variant="secondary" className={cn("text-xs", getCategoryChipStyle(tournament.category))}>
+                  {getCategoryLabel(tournament.category)}
+                </Badge>
+              )}
             </div>
           </div>
 
