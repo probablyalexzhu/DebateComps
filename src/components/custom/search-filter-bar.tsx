@@ -205,6 +205,12 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="large" id="category-large" />
+                    <Label htmlFor="category-large" className="font-normal cursor-pointer">
+                      Large Tournament
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
                     <RadioGroupItem value="premier" id="category-premier" />
                     <Label htmlFor="category-premier" className="font-normal cursor-pointer">
                       Premier Regional
@@ -214,12 +220,6 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                     <RadioGroupItem value="wudc" id="category-wudc" />
                     <Label htmlFor="category-wudc" className="font-normal cursor-pointer">
                       WUDC
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="large" id="category-large" />
-                    <Label htmlFor="category-large" className="font-normal cursor-pointer">
-                      Large Tournament
                     </Label>
                   </div>
                 </RadioGroup>

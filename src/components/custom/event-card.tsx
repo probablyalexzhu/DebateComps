@@ -9,21 +9,7 @@ import { getCountryFlag } from "@/lib/country-flags"
 import { cn } from "@/lib/utils"
 import { toggleSavedTournament, isTournamentSaved } from "@/lib/saved-tournaments"
 import { generateGoogleCalendarUrl } from "@/lib/calendar-export"
-
-interface Tournament {
-  competitionName: string
-  date: string
-  fees: string
-  format: string
-  infoLink: string
-  judgeRule: string
-  location: string
-  profitStatus: string
-  regLink: string
-  timezone: string
-  teamCap: string
-  category: string
-}
+import { Tournament } from "@/types/tournament"
 
 interface EventCardProps {
   tournament: Tournament
@@ -57,20 +43,11 @@ export function EventCard({ tournament }: EventCardProps) {
     return 'bg-muted text-muted-foreground'
   }
 
-  const getCategoryChipStyle = (category: string) => {
-    switch (category) {
-      case 'premier': return 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700'
-      case 'wudc': return 'bg-cyan-100 text-cyan-800 border-cyan-300 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-700'
-      case 'large': return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800'
-      default: return ''
-    }
-  }
-
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case 'premier': return 'Premier Regional'
       case 'wudc': return 'WUDC'
-      case 'large': return 'Large Comp'
+      case 'large': return 'Large Tournament'
       default: return ''
     }
   }
@@ -81,20 +58,29 @@ export function EventCard({ tournament }: EventCardProps) {
     return 'bg-muted text-muted-foreground'
   }
 
-  const getCardCategoryStyle = (category: string) => {
+  const getCardCategoryBg = (category: string) => {
     switch (category) {
-      case 'premier': return 'border-l-4 border-l-amber-400 !bg-(--card-premier)'
-      case 'wudc': return 'border-l-4 border-l-cyan-500 !bg-(--card-wudc)'
-      case 'large': return 'border-l-4 border-l-red-400 !bg-(--card-large)'
+      case 'premier': return '!bg-(--card-premier)'
+      case 'wudc': return '!bg-(--card-wudc)'
+      case 'large': return '!bg-(--card-large)'
       default: return ''
     }
   }
 
-  const getCategoryStripeColor = (category: string) => {
+  const getCategoryTabColor = (category: string) => {
     switch (category) {
-      case 'premier': return 'bg-amber-400'
-      case 'wudc': return 'bg-cyan-500'
-      case 'large': return 'bg-red-400'
+      case 'premier': return 'bg-amber-400 dark:bg-amber-500'
+      case 'wudc': return 'bg-cyan-500 dark:bg-cyan-400'
+      case 'large': return 'bg-[oklch(0.65_0.15_35)] dark:bg-[oklch(0.68_0.13_35)]'
+      default: return ''
+    }
+  }
+
+  const getCategoryTabText = (category: string) => {
+    switch (category) {
+      case 'premier': return 'text-white dark:text-amber-950'
+      case 'wudc': return 'text-white dark:text-cyan-950'
+      case 'large': return 'text-white dark:text-red-950'
       default: return ''
     }
   }
@@ -105,8 +91,35 @@ export function EventCard({ tournament }: EventCardProps) {
     ? tournament.teamCap + " Teams"
     : 'N/A'
 
+  const hasCategory = !!tournament.category
+
   return (
-    <Card className={cn("overflow-hidden h-full flex flex-col pt-0 pb-0 transition-transform duration-200 ease-out hover:-translate-y-0.5", getCardCategoryStyle(tournament.category))}>
+    <div className={cn("group/card relative h-full", hasCategory && "hover:z-20")}>
+      {hasCategory && (
+        <div
+          className={cn(
+            "absolute top-0 bottom-0 left-0 right-0 rounded-xl",
+            "-translate-x-[4px] group-hover/card:-translate-x-3 group-hover/card:-translate-y-[3px]",
+            "transition-transform duration-300 ease-[cubic-bezier(0.25,1.3,0.5,1)]",
+            "flex items-center justify-start pl-0.5",
+            getCategoryTabColor(tournament.category),
+          )}
+        >
+          <span
+            className={cn(
+              "text-sm font-extrabold uppercase tracking-widest whitespace-nowrap [writing-mode:vertical-rl] rotate-180",
+              getCategoryTabText(tournament.category),
+            )}
+          >
+            {getCategoryLabel(tournament.category)}
+          </span>
+        </div>
+      )}
+      <Card className={cn(
+        "relative z-10 overflow-hidden h-full flex flex-col pt-0 pb-0",
+        hasCategory && "transition-transform duration-300 ease-[cubic-bezier(0.25,1.3,0.5,1)] group-hover/card:translate-x-3 group-hover/card:translate-y-[3px]",
+        getCardCategoryBg(tournament.category),
+      )}>
       <CardContent className="p-5 flex flex-col flex-1">
         <div className="space-y-4 flex-1">
           <div className="flex items-start justify-between">
@@ -128,11 +141,6 @@ export function EventCard({ tournament }: EventCardProps) {
               <Badge variant="secondary" className={cn("text-xs", getTeamCapChipStyle(teamCapDisplay))}>
                 {teamCapDisplay}
               </Badge>
-              {tournament.category && (
-                <Badge variant="secondary" className={cn("text-xs", getCategoryChipStyle(tournament.category))}>
-                  {getCategoryLabel(tournament.category)}
-                </Badge>
-              )}
             </div>
           </div>
 
@@ -200,5 +208,6 @@ export function EventCard({ tournament }: EventCardProps) {
         </div>
       </CardContent>
     </Card>
+    </div>
   )
 }
