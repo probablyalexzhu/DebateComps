@@ -133,7 +133,7 @@ export function EventCard({ tournament }: EventCardProps) {
             </Button>
           ) : (
             <Button className="flex-1 opacity-50 cursor-not-allowed" disabled>
-              Reg TBA
+              Register
             </Button>
           )}
           {tournament.infoLink && tournament.infoLink !== "TBA" && tournament.infoLink.trim() !== "" ? (
@@ -144,7 +144,7 @@ export function EventCard({ tournament }: EventCardProps) {
             </Button>
           ) : (
             <Button variant="outline" className="flex-1 bg-transparent opacity-50 cursor-not-allowed" disabled>
-              Info TBA
+              More Info
             </Button>
           )}
           <Button

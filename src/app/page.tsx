@@ -266,20 +266,31 @@ export default function Home() {
 
         {viewMode === 'grid' ? (
           <>
-            {sections.map((section) => (
-              <div key={section.label} className="mb-8">
-                <h2
-                  className="text-xl font-semibold mb-4 text-foreground"
-                >
-                  {section.label}
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {section.tournaments.map((tournament, index) => (
-                    <EventCard key={`${section.label}-${tournament.competitionName}-${index}`} tournament={tournament} />
-                  ))}
+            {sections.map((section) =>
+              section.label === "This Week" ? (
+                <div key={section.label} className="this-week-banner mb-8 py-8">
+                  <h2 className="text-2xl font-semibold mb-6 text-white">
+                    {section.label} ({section.tournaments.length})
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {section.tournaments.map((tournament, index) => (
+                      <EventCard key={`${section.label}-${tournament.competitionName}-${index}`} tournament={tournament} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ) : (
+                <div key={section.label} className="mb-8">
+                  <h2 className="text-2xl font-semibold mb-4 text-foreground">
+                    {section.label} ({section.tournaments.length})
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {section.tournaments.map((tournament, index) => (
+                      <EventCard key={`${section.label}-${tournament.competitionName}-${index}`} tournament={tournament} />
+                    ))}
+                  </div>
+                </div>
+              )
+            )}
 
             {hasMore && <div ref={sentinelRef} className="h-4" />}
           </>

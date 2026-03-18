@@ -189,6 +189,7 @@
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
+    overflow-x: hidden;
   }
 }
 
@@ -204,6 +205,20 @@
 .logo-spin:hover {
   animation: spin-logo 1s;
 }
+
+/* This Week featured banner — full-bleed via viewport margin trick */
+.this-week-banner {
+  background-color: var(--primary);
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: calc(50vw - 50%);
+  padding-right: calc(50vw - 50%);
+}
+
+.dark .this-week-banner {
+  background-color: oklch(0.35 0.04 145);
+}
+
 
 /* React Big Calendar Custom Styles */
 .rbc-calendar {
