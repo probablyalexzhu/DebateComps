@@ -15,6 +15,25 @@ interface EventCardProps {
   tournament: Tournament
 }
 
+const CATEGORY_CONFIG: Record<string, { label: string; bg: string; tabColor: string; tabText: string }> = {
+  premier: { label: 'Premier Regional', bg: '!bg-(--card-premier)', tabColor: 'bg-amber-400 dark:bg-amber-500', tabText: 'text-white dark:text-amber-950' },
+  wudc:    { label: 'WUDC',             bg: '!bg-(--card-wudc)',    tabColor: 'bg-cyan-500 dark:bg-cyan-400',    tabText: 'text-white dark:text-cyan-950' },
+  large:   { label: 'Large Tournament', bg: '!bg-(--card-large)',   tabColor: 'bg-emerald-400',                  tabText: 'text-white dark:text-emerald-950' },
+}
+
+function getFormatChipStyle(format: string) {
+  const f = format.toUpperCase().trim()
+  if (f.includes('BP')) return 'bg-secondary/40 text-secondary-foreground border-secondary/60'
+  if (f.includes('AP')) return 'bg-accent/40 text-accent border-accent/60'
+  return 'bg-muted text-muted-foreground'
+}
+
+function getTeamCapChipStyle(teamCap: string) {
+  const cap = parseInt(teamCap, 10)
+  if (!isNaN(cap) && cap > 80) return 'bg-primary/20 text-primary border-primary/40'
+  return 'bg-muted text-muted-foreground'
+}
+
 export function EventCard({ tournament }: EventCardProps) {
   // Generate unique ID for tournament
   const tournamentId = `${tournament.competitionName}-${tournament.date}`.replace(/\s+/g, '-').toLowerCase()
@@ -36,55 +55,6 @@ export function EventCard({ tournament }: EventCardProps) {
     window.open(url, '_blank')
   }
 
-  const getFormatChipStyle = (format: string) => {
-    const f = format.toUpperCase().trim()
-    if (f.includes('BP')) return 'bg-secondary/25 text-secondary-foreground border-secondary/40'
-    if (f.includes('AP')) return 'bg-accent/25 text-accent border-accent/40'
-    return 'bg-muted text-muted-foreground'
-  }
-
-  const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'premier': return 'Premier Regional'
-      case 'wudc': return 'WUDC'
-      case 'large': return 'Large Tournament'
-      default: return ''
-    }
-  }
-
-  const getTeamCapChipStyle = (teamCap: string) => {
-    const cap = parseInt(teamCap, 10)
-    if (!isNaN(cap) && cap > 80) return 'bg-primary/10 text-primary border-primary/20'
-    return 'bg-muted text-muted-foreground'
-  }
-
-  const getCardCategoryBg = (category: string) => {
-    switch (category) {
-      case 'premier': return '!bg-(--card-premier)'
-      case 'wudc': return '!bg-(--card-wudc)'
-      case 'large': return '!bg-(--card-large)'
-      default: return ''
-    }
-  }
-
-  const getCategoryTabColor = (category: string) => {
-    switch (category) {
-      case 'premier': return 'bg-amber-400 dark:bg-amber-500'
-      case 'wudc': return 'bg-cyan-500 dark:bg-cyan-400'
-      case 'large': return 'bg-emerald-400 dark:bg-emerald-400'
-      default: return ''
-    }
-  }
-
-  const getCategoryTabText = (category: string) => {
-    switch (category) {
-      case 'premier': return 'text-white dark:text-amber-950'
-      case 'wudc': return 'text-white dark:text-cyan-950'
-      case 'large': return 'text-white dark:text-emerald-950'
-      default: return ''
-    }
-  }
-
   // Get team cap display value
   const teamCapDisplay = tournament.teamCap && tournament.teamCap.trim() !== ''
   && tournament.teamCap !== 'N/A' && tournament.teamCap !== 'TBA'
@@ -102,16 +72,16 @@ export function EventCard({ tournament }: EventCardProps) {
             "-translate-y-3 md:translate-y-0 md:-translate-x-[4px] md:group-hover/card:-translate-x-3 md:group-hover/card:-translate-y-[3px]",
             "transition-transform duration-300 ease-[cubic-bezier(0.25,1.3,0.5,1)]",
             "flex md:items-center md:justify-start md:pl-0.5 items-start justify-center pt-0.5",
-            getCategoryTabColor(tournament.category),
+            CATEGORY_CONFIG[tournament.category]?.tabColor,
           )}
         >
           <span
             className={cn(
               "text-sm font-extrabold uppercase tracking-widest whitespace-nowrap md:[writing-mode:vertical-rl] md:rotate-180",
-              getCategoryTabText(tournament.category),
+              CATEGORY_CONFIG[tournament.category]?.tabText,
             )}
           >
-            {getCategoryLabel(tournament.category)}
+            {CATEGORY_CONFIG[tournament.category]?.label}
           </span>
         </div>
       )}
@@ -119,7 +89,7 @@ export function EventCard({ tournament }: EventCardProps) {
         "relative z-10 overflow-hidden h-full flex flex-col pt-0 pb-0",
         hasCategory && "rounded-t-none md:rounded-t-xl",
         hasCategory && "translate-y-3 md:translate-y-0 md:translate-x-0 md:transition-transform md:duration-300 md:ease-[cubic-bezier(0.25,1.3,0.5,1)] md:group-hover/card:translate-x-3 md:group-hover/card:translate-y-[3px]",
-        getCardCategoryBg(tournament.category),
+        CATEGORY_CONFIG[tournament.category]?.bg,
       )}>
       <CardContent className="p-5 flex flex-col flex-1">
         <div className="space-y-4 flex-1">

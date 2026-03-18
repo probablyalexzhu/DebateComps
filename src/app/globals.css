@@ -127,7 +127,7 @@
   --tracking-normal: 0.025em;
   --card-premier: oklch(0.97 0.02 75);
   --card-wudc: oklch(0.96 0.02 200);
-  --card-large: oklch(0.96 0.015 160);
+  --card-large: oklch(0.96 0.007 160);
 }
 
 .dark {
@@ -185,7 +185,7 @@
   --shadow-2xl: 0px 6px 16px 4px hsl(0 0% 0% / 1.00);
   --card-premier: oklch(0.26 0.012 75);
   --card-wudc: oklch(0.26 0.012 200);
-  --card-large: oklch(0.26 0.008 160);
+  --card-large: oklch(0.26 0.004 160);
 }
 
 @layer base {

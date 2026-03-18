@@ -18,6 +18,8 @@ const ITEMS_PER_BATCH = 16;
 type ViewMode = 'grid' | 'calendar';
 type TournamentSection = { label: string; tournaments: Tournament[] };
 
+const GRID_CLASSNAME = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6";
+
 export default function Home() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState(true);
@@ -294,7 +296,7 @@ export default function Home() {
                   <h2 className="text-2xl font-semibold mb-6 text-white font-serif tracking-tight">
                     {section.label} ({section.tournaments.length})
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6">
+                  <div className={GRID_CLASSNAME}>
                     {section.tournaments.map((tournament, index) => (
                       <EventCard key={`${section.label}-${tournament.competitionName}-${index}`} tournament={tournament} />
                     ))}
@@ -305,7 +307,7 @@ export default function Home() {
                   <h2 className="text-2xl font-semibold mb-4 text-foreground font-serif tracking-tight">
                     {section.label} ({section.tournaments.length})
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6">
+                  <div className={GRID_CLASSNAME}>
                     {section.tournaments.map((tournament, index) => (
                       <EventCard key={`${section.label}-${tournament.competitionName}-${index}`} tournament={tournament} />
                     ))}
