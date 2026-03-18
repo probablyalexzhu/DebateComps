@@ -71,7 +71,7 @@ export function EventCard({ tournament }: EventCardProps) {
     switch (category) {
       case 'premier': return 'bg-amber-400 dark:bg-amber-500'
       case 'wudc': return 'bg-cyan-500 dark:bg-cyan-400'
-      case 'large': return 'bg-[oklch(0.65_0.15_35)] dark:bg-[oklch(0.68_0.13_35)]'
+      case 'large': return 'bg-emerald-400 dark:bg-emerald-400'
       default: return ''
     }
   }
@@ -80,7 +80,7 @@ export function EventCard({ tournament }: EventCardProps) {
     switch (category) {
       case 'premier': return 'text-white dark:text-amber-950'
       case 'wudc': return 'text-white dark:text-cyan-950'
-      case 'large': return 'text-white dark:text-red-950'
+      case 'large': return 'text-white dark:text-emerald-950'
       default: return ''
     }
   }
@@ -117,6 +117,7 @@ export function EventCard({ tournament }: EventCardProps) {
       )}
       <Card className={cn(
         "relative z-10 overflow-hidden h-full flex flex-col pt-0 pb-0",
+        hasCategory && "rounded-t-none md:rounded-t-xl",
         hasCategory && "translate-y-3 md:translate-y-0 md:translate-x-0 md:transition-transform md:duration-300 md:ease-[cubic-bezier(0.25,1.3,0.5,1)] md:group-hover/card:translate-x-3 md:group-hover/card:translate-y-[3px]",
         getCardCategoryBg(tournament.category),
       )}>

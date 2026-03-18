@@ -127,7 +127,7 @@
   --tracking-normal: 0.025em;
   --card-premier: oklch(0.97 0.02 75);
   --card-wudc: oklch(0.96 0.02 200);
-  --card-large: oklch(0.96 0.015 25);
+  --card-large: oklch(0.96 0.015 160);
 }
 
 .dark {
@@ -185,7 +185,7 @@
   --shadow-2xl: 0px 6px 16px 4px hsl(0 0% 0% / 1.00);
   --card-premier: oklch(0.26 0.012 75);
   --card-wudc: oklch(0.26 0.012 200);
-  --card-large: oklch(0.26 0.008 25);
+  --card-large: oklch(0.26 0.008 160);
 }
 
 @layer base {
@@ -217,7 +217,7 @@
 
 /* This Week featured banner — full-bleed via viewport margin trick */
 .this-week-banner {
-  background-color: var(--primary);
+  background-color: oklch(0.48 0.10 200);
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
   padding-left: calc(50vw - 50%);
@@ -225,7 +225,7 @@
 }
 
 .dark .this-week-banner {
-  background-color: oklch(0.25 0.04 145);
+  background-color: oklch(0.25 0.05 200);
 }
 
 
