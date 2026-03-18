@@ -96,7 +96,7 @@ export default function SavedPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4">Saved Tournaments ({savedTournaments.length})</h1>
+        <h1 className="text-3xl font-bold mb-4 font-serif tracking-tight">Saved Tournaments ({savedTournaments.length})</h1>
 
         <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6 flex items-start gap-3">
           <Info className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />

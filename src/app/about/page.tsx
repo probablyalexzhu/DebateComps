@@ -4,7 +4,7 @@ export default function AboutPage() {
   return (
     <div className="bg-background">
       <div className="container mx-auto px-4 py-12 max-w-3xl space-y-6">
-        <h1 className="text-4xl font-bold">About DebateComps</h1>
+        <h1 className="text-4xl font-bold font-serif tracking-tight">About DebateComps</h1>
         <p className="text-lg text-muted-foreground leading-relaxed">
           DebateComps curates upcoming debate tournaments from around the world
           so that debaters, adjudicators, and organizers can plan their seasons
