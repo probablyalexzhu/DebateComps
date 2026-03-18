@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { Search, SlidersHorizontal, X } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
@@ -16,6 +17,7 @@ export interface FilterState {
   teamCapMin: number
   teamCapMax: number
   oneDayOnly: boolean
+  category: string | null
 }
 
 interface SearchFilterBarProps {
@@ -56,6 +58,13 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
     onFiltersChange({ ...filters, oneDayOnly: checked })
   }
 
+  const handleCategoryChange = (value: string) => {
+    onFiltersChange({
+      ...filters,
+      category: value === "all" ? null : value,
+    })
+  }
+
   const handleClearFilters = () => {
     onFiltersChange({
       searchText: "",
@@ -64,6 +73,7 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
       teamCapMin: 0,
       teamCapMax: 400,
       oneDayOnly: false,
+      category: null,
     })
     setIsOpen(false)
   }
@@ -74,7 +84,8 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
     filters.format !== null ||
     filters.teamCapMin !== 0 ||
     filters.teamCapMax !== 400 ||
-    filters.oneDayOnly
+    filters.oneDayOnly ||
+    filters.category !== null
 
   return (
     <div className="space-y-4 mb-8">
@@ -142,6 +153,16 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                     </Label>
                   </div>
                 </RadioGroup>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="one-day"
+                    checked={filters.oneDayOnly}
+                    onCheckedChange={(checked) => handleOneDayChange(checked === true)}
+                  />
+                  <Label htmlFor="one-day" className="font-normal cursor-pointer">
+                    One-day Only
+                  </Label>
+                </div>
               </div>
 
               <div className="space-y-3">
@@ -175,19 +196,33 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
               </div>
 
               <div className="space-y-3">
-                <Label className="text-sm font-medium">Duration</Label>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="one-day"
-                    checked={filters.oneDayOnly}
-                    onChange={(e) => handleOneDayChange(e.target.checked)}
-                    className="h-4 w-4 rounded border-border accent-primary cursor-pointer"
-                  />
-                  <Label htmlFor="one-day" className="font-normal cursor-pointer">
-                    One-day tournaments only
-                  </Label>
-                </div>
+                <Label className="text-sm font-medium">Category</Label>
+                <RadioGroup value={filters.category || "all"} onValueChange={handleCategoryChange}>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="all" id="category-all" />
+                    <Label htmlFor="category-all" className="font-normal cursor-pointer">
+                      All Categories
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="premier" id="category-premier" />
+                    <Label htmlFor="category-premier" className="font-normal cursor-pointer">
+                      Premier Regional
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="wudc" id="category-wudc" />
+                    <Label htmlFor="category-wudc" className="font-normal cursor-pointer">
+                      WUDC
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="large" id="category-large" />
+                    <Label htmlFor="category-large" className="font-normal cursor-pointer">
+                      Large Tournament
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
 
               <div className="space-y-3">

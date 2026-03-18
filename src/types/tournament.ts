@@ -10,4 +10,5 @@ export interface Tournament {
   profitStatus: string;
   teamCap: string;
   infoLink: string;
+  category: string;
 }

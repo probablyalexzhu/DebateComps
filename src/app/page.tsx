@@ -34,6 +34,7 @@ export default function Home() {
     teamCapMin: 0,
     teamCapMax: 400,
     oneDayOnly: false,
+    category: null,
   })
 
   const filteredTournaments = useMemo(() => {
@@ -70,6 +71,11 @@ export default function Home() {
         } catch {
           return false
         }
+      }
+
+      // Category filter
+      if (filters.category) {
+        if (tournament.category !== filters.category) return false
       }
 
       // Team cap range filter

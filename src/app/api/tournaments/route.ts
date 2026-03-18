@@ -4,6 +4,35 @@ interface CellData {
   formattedValue?: string;
   hyperlink?: string;
   textFormatRuns?: { format?: { link?: { uri?: string } }; startIndex?: number }[];
+  effectiveFormat?: { backgroundColor?: { red?: number; green?: number; blue?: number } };
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  const toHex = (v: number) => Math.round(v * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function colorDistance(hex1: string, hex2: string): number {
+  const parse = (h: string) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  const [r1, g1, b1] = parse(hex1);
+  const [r2, g2, b2] = parse(hex2);
+  return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
+}
+
+const CATEGORY_COLORS: { hex: string; category: string }[] = [
+  { hex: '#fbbc04', category: 'premier' },
+  { hex: '#25d6e4', category: 'wudc' },
+  { hex: '#dd7e6b', category: 'large' },
+];
+
+function getCategoryFromColor(cell: CellData | undefined): string {
+  const bg = cell?.effectiveFormat?.backgroundColor;
+  if (!bg) return '';
+  const hex = rgbToHex(bg.red ?? 0, bg.green ?? 0, bg.blue ?? 0);
+  for (const { hex: target, category } of CATEGORY_COLORS) {
+    if (colorDistance(hex, target) < 30) return category;
+  }
+  return '';
 }
 
 function extractCellValue(cell: CellData | undefined): string {
@@ -65,7 +94,7 @@ export async function GET() {
   try {
     const results = await Promise.all(
       ranges.map(async ({ range, label }) => {
-        const fields = 'sheets(data(rowData(values(formattedValue,hyperlink,textFormatRuns(format(link(uri)),startIndex)))))';
+        const fields = 'sheets(data(rowData(values(formattedValue,hyperlink,textFormatRuns(format(link(uri)),startIndex),effectiveFormat(backgroundColor)))))';
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?ranges=${encodeURIComponent(range)}&fields=${encodeURIComponent(fields)}&key=${apiKey}`;
         const res = await fetch(url);
         const json = await res.json();
@@ -133,6 +162,7 @@ export async function GET() {
 
               tournament[propertyName] = value;
             });
+            tournament.category = getCategoryFromColor(cells[0]);
             return tournament;
           });
       })
