@@ -17,7 +17,7 @@ const karla = Karla({
 });
 
 export const metadata: Metadata = {
-  title: "DebateComps - The home for competitive debate",
+  title: "DebateComps — The home for competitive debate",
   description: "Where debaters, adjudicators, and organizers come together to find the best opportunities.",
 };
 

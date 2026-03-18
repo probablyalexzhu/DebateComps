@@ -294,7 +294,7 @@ export default function Home() {
                   <h2 className="text-2xl font-semibold mb-6 text-white font-serif tracking-tight">
                     {section.label} ({section.tournaments.length})
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6">
                     {section.tournaments.map((tournament, index) => (
                       <EventCard key={`${section.label}-${tournament.competitionName}-${index}`} tournament={tournament} />
                     ))}
@@ -305,7 +305,7 @@ export default function Home() {
                   <h2 className="text-2xl font-semibold mb-4 text-foreground font-serif tracking-tight">
                     {section.label} ({section.tournaments.length})
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6">
                     {section.tournaments.map((tournament, index) => (
                       <EventCard key={`${section.label}-${tournament.competitionName}-${index}`} tournament={tournament} />
                     ))}

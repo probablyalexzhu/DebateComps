@@ -99,15 +99,15 @@ export function EventCard({ tournament }: EventCardProps) {
         <div
           className={cn(
             "absolute top-0 bottom-0 left-0 right-0 rounded-xl",
-            "-translate-x-[4px] group-hover/card:-translate-x-3 group-hover/card:-translate-y-[3px]",
+            "-translate-y-3 md:translate-y-0 md:-translate-x-[4px] md:group-hover/card:-translate-x-3 md:group-hover/card:-translate-y-[3px]",
             "transition-transform duration-300 ease-[cubic-bezier(0.25,1.3,0.5,1)]",
-            "flex items-center justify-start pl-0.5",
+            "flex md:items-center md:justify-start md:pl-0.5 items-start justify-center pt-0.5",
             getCategoryTabColor(tournament.category),
           )}
         >
           <span
             className={cn(
-              "text-sm font-extrabold uppercase tracking-widest whitespace-nowrap [writing-mode:vertical-rl] rotate-180",
+              "text-sm font-extrabold uppercase tracking-widest whitespace-nowrap md:[writing-mode:vertical-rl] md:rotate-180",
               getCategoryTabText(tournament.category),
             )}
           >
@@ -117,7 +117,7 @@ export function EventCard({ tournament }: EventCardProps) {
       )}
       <Card className={cn(
         "relative z-10 overflow-hidden h-full flex flex-col pt-0 pb-0",
-        hasCategory && "transition-transform duration-300 ease-[cubic-bezier(0.25,1.3,0.5,1)] group-hover/card:translate-x-3 group-hover/card:translate-y-[3px]",
+        hasCategory && "translate-y-3 md:translate-y-0 md:translate-x-0 md:transition-transform md:duration-300 md:ease-[cubic-bezier(0.25,1.3,0.5,1)] md:group-hover/card:translate-x-3 md:group-hover/card:translate-y-[3px]",
         getCardCategoryBg(tournament.category),
       )}>
       <CardContent className="p-5 flex flex-col flex-1">
