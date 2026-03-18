@@ -177,7 +177,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8">
           <header className="mb-8">
             <div className="flex flex-col justify-center py-6">
-              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps - The home for debate</h1>
+              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps — The home for debate</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
           </header>
@@ -195,7 +195,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-8">
           <header className="mb-8">
             <div className="flex flex-col justify-center py-6">
-              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps - The home for debate</h1>
+              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps — The home for debate</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
           </header>
@@ -215,7 +215,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <header className="mb-10">
           <div className="flex flex-col justify-center pt-10 pb-6">
-            <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps - The home for debate</h1>
+            <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps — The home for debate</h1>
             <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
           </div>
         </header>
