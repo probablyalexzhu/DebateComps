@@ -95,11 +95,11 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
         {currentView !== 'agenda' && (
           <div className="flex items-center gap-4 pb-4 border-b border-border">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: '#3b82f6' }}></div>
+              <div className="w-4 h-4 rounded bg-secondary"></div>
               <span className="text-sm text-foreground">Online</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: '#10b981' }}></div>
+              <div className="w-4 h-4 rounded bg-primary"></div>
               <span className="text-sm text-foreground">In-Person</span>
             </div>
           </div>

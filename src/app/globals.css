@@ -283,15 +283,15 @@
 .rbc-month-view .rbc-event-online,
 .rbc-week-view .rbc-event-online,
 .rbc-day-view .rbc-event-online {
-  background-color: #3b82f6 !important;
-  color: white !important;
+  background-color: var(--secondary) !important;
+  color: var(--secondary-foreground) !important;
 }
 
 .rbc-month-view .rbc-event-inperson,
 .rbc-week-view .rbc-event-inperson,
 .rbc-day-view .rbc-event-inperson {
-  background-color: #10b981 !important;
-  color: white !important;
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
 }
 
 /* "+X more" overflow indicators */
