@@ -27,7 +27,7 @@ export function CountryToggle() {
 
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors outline-none">
+      <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors outline-none sm:w-24">
         <FlagIcon code={active.flagCode} />
         <span className="hidden sm:inline">{active.label}</span>
         <ChevronDown className="h-3.5 w-3.5" />
