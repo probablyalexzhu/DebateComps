@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, CircleDollarSign, Bookmark, Clock } from "lucide-react"
+import { Calendar, MapPin, CircleDollarSign, Bookmark, Clock, Globe, Wifi } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { getCountryFlag } from "@/lib/country-flags"
 import { cn } from "@/lib/utils"
@@ -96,7 +96,13 @@ export function EventCard({ tournament }: EventCardProps) {
       <CardContent className="p-5 flex flex-col flex-1">
         <div className="space-y-4 flex-1">
           <div className="flex items-start justify-between">
-            <span className="text-2xl">{flag}</span>
+            {flag.type === 'code' ? (
+              <span className={`fi fi-${flag.code} rounded-[0.375rem]`} style={{ fontSize: '1.5rem' }} />
+            ) : flag.emoji === '💻' ? (
+              <Wifi className="h-6 w-6 text-foreground" />
+            ) : (
+              <Globe className="h-6 w-6 text-foreground" />
+            )}
             <button
               onClick={handleToggleSave}
               className="-m-1.5 p-2.5 ml-3 rounded-full hover:bg-muted transition-colors cursor-pointer shrink-0"

@@ -1,106 +1,155 @@
-// Mapping of country names to their flag emojis
-const countryFlags: Record<string, string> = {
-    // Asia
-    India: "🇮🇳",
-    China: "🇨🇳",
-    Japan: "🇯🇵",
-    "South Korea": "🇰🇷",
-    Thailand: "🇹🇭",
-    Vietnam: "🇻🇳",
-    Singapore: "🇸🇬",
-    Malaysia: "🇲🇾",
-    Indonesia: "🇮🇩",
-    Philippines: "🇵🇭",
-    Pakistan: "🇵🇰",
-    Bangladesh: "🇧🇩",
-    "Sri Lanka": "🇱🇰",
-    Nepal: "🇳🇵",
-    Myanmar: "🇲🇲",
-    Cambodia: "🇰🇭",
-    Laos: "🇱🇦",
-    Taiwan: "🇹🇼",
-    "Hong Kong": "🇭🇰",
-    Macau: "🇲🇴",
-  
-    // Europe
-    "United Kingdom": "🇬🇧",
-    UK: "🇬🇧",
-    England: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-    Scotland: "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-    Wales: "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
-    France: "🇫🇷",
-    Germany: "🇩🇪",
-    Italy: "🇮🇹",
-    Spain: "🇪🇸",
-    Portugal: "🇵🇹",
-    Netherlands: "🇳🇱",
-    Belgium: "🇧🇪",
-    Switzerland: "🇨🇭",
-    Austria: "🇦🇹",
-    Poland: "🇵🇱",
-    Czechia: "🇨🇿",
-    Hungary: "🇭🇺",
-    Romania: "🇷🇴",
-    Greece: "🇬🇷",
-    Sweden: "🇸🇪",
-    Norway: "🇳🇴",
-    Denmark: "🇩🇰",
-    Finland: "🇫🇮",
-    Ireland: "🇮🇪",
-    Russia: "🇷🇺",
-    Latvia: "🇱🇻",
-    Lithuania: "🇱🇹",
-    Estonia: "🇪🇪",
-    Slovakia: "🇸🇰",
-    Slovenia: "🇸🇮",
-    Croatia: "🇭🇷",
-    Montenegro: "🇲🇪",
-    Serbia: "🇷🇸",
-  
-    // Americas
-    "United States": "🇺🇸",
-    USA: "🇺🇸",
-    US: "🇺🇸",
-    Canada: "🇨🇦",
-    Mexico: "🇲🇽",
-    Brazil: "🇧🇷",
-    Argentina: "🇦🇷",
-    Chile: "🇨🇱",
-    Colombia: "🇨🇴",
-    Peru: "🇵🇪",
-    Venezuela: "🇻🇪",
-  
-    // Oceania
-    Australia: "🇦🇺",
-    "New Zealand": "🇳🇿",
-  
-    // Middle East
-    UAE: "🇦🇪",
-    "Saudi Arabia": "🇸🇦",
-    Israel: "🇮🇱",
-    Turkey: "🇹🇷",
-    Iran: "🇮🇷",
-  
-    // Africa
-    "South Africa": "🇿🇦",
-    Egypt: "🇪🇬",
-    Nigeria: "🇳🇬",
-    Kenya: "🇰🇪",
-    Morocco: "🇲🇦",
+const countryToCode: Record<string, string> = {
+  // Asia
+  India: "in",
+  China: "cn",
+  Japan: "jp",
+  "South Korea": "kr",
+  Thailand: "th",
+  Vietnam: "vn",
+  Singapore: "sg",
+  Malaysia: "my",
+  Indonesia: "id",
+  Philippines: "ph",
+  Pakistan: "pk",
+  Bangladesh: "bd",
+  "Sri Lanka": "lk",
+  Nepal: "np",
+  Myanmar: "mm",
+  Cambodia: "kh",
+  Laos: "la",
+  Taiwan: "tw",
+  "Hong Kong": "hk",
+  Macau: "mo",
+  Mongolia: "mn",
+  Brunei: "bn",
+  "Timor-Leste": "tl",
+
+  // Europe
+  "United Kingdom": "gb",
+  UK: "gb",
+  England: "gb-eng",
+  Scotland: "gb-sct",
+  Wales: "gb-wls",
+  France: "fr",
+  Germany: "de",
+  Italy: "it",
+  Spain: "es",
+  Portugal: "pt",
+  Netherlands: "nl",
+  Belgium: "be",
+  Switzerland: "ch",
+  Austria: "at",
+  Poland: "pl",
+  Czechia: "cz",
+  Hungary: "hu",
+  Romania: "ro",
+  Greece: "gr",
+  Sweden: "se",
+  Norway: "no",
+  Denmark: "dk",
+  Finland: "fi",
+  Ireland: "ie",
+  Russia: "ru",
+  Latvia: "lv",
+  Lithuania: "lt",
+  Estonia: "ee",
+  Slovakia: "sk",
+  Slovenia: "si",
+  Croatia: "hr",
+  Montenegro: "me",
+  Serbia: "rs",
+  Ukraine: "ua",
+  Bulgaria: "bg",
+  "North Macedonia": "mk",
+  Albania: "al",
+  "Bosnia and Herzegovina": "ba",
+  Bosnia: "ba",
+
+  // Americas
+  "United States": "us",
+  USA: "us",
+  US: "us",
+  Canada: "ca",
+  Mexico: "mx",
+  Brazil: "br",
+  Argentina: "ar",
+  Chile: "cl",
+  Colombia: "co",
+  Peru: "pe",
+  Venezuela: "ve",
+  Ecuador: "ec",
+  Uruguay: "uy",
+  "Costa Rica": "cr",
+  Panama: "pa",
+
+  // Oceania
+  Australia: "au",
+  "New Zealand": "nz",
+
+  // Middle East
+  UAE: "ae",
+  "Saudi Arabia": "sa",
+  Israel: "il",
+  Turkey: "tr",
+  Iran: "ir",
+  Qatar: "qa",
+  Bahrain: "bh",
+  Kuwait: "kw",
+  Oman: "om",
+  Jordan: "jo",
+  Lebanon: "lb",
+
+  // Africa
+  "South Africa": "za",
+  Egypt: "eg",
+  Nigeria: "ng",
+  Kenya: "ke",
+  Morocco: "ma",
+  Botswana: "bw",
+  Ghana: "gh",
+  Tanzania: "tz",
+  Uganda: "ug",
+  Ethiopia: "et",
+}
+
+// Build a case-insensitive lookup map
+const lowerCaseMap = new Map<string, string>()
+for (const [name, code] of Object.entries(countryToCode)) {
+  lowerCaseMap.set(name.toLowerCase(), code)
+}
+
+function findCountryCode(text: string): string | null {
+  const trimmed = text.trim().toLowerCase()
+  // Direct lookup
+  if (lowerCaseMap.has(trimmed)) return lowerCaseMap.get(trimmed)!
+  // Check if text contains a country name (longer names first to prefer "South Korea" over just matching a substring)
+  const sorted = [...lowerCaseMap.entries()].sort((a, b) => b[0].length - a[0].length)
+  for (const [name, code] of sorted) {
+    if (trimmed.includes(name)) return code
   }
-  
-  export function getCountryFlag(location: string): string {
-    if (!location) return "🌍"
-    // Check if location contains "online" (case insensitive)
-    if (location.toLowerCase().includes("online")) {
-      return "💻"
-    }
-  
-    // Extract country from location string (usually the last part after comma)
-    const parts = location.split(",").map((part) => part.trim())
-    const country = parts[parts.length - 1]
-  
-    // Look up the country flag
-    return countryFlags[country] || "🌍"
+  return null
+}
+
+export type FlagResult = { type: 'code'; code: string } | { type: 'emoji'; emoji: string }
+
+export function getCountryFlag(location: string): FlagResult {
+  if (!location || location.trim() === '' || location.trim() === 'TBA') {
+    return { type: 'emoji', emoji: '🌍' }
   }
-  
+  if (location.toLowerCase().includes("online")) {
+    return { type: 'emoji', emoji: '💻' }
+  }
+
+  // Try each comma-separated part, last to first (country is usually last)
+  const parts = location.split(",").map((part) => part.trim())
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const code = findCountryCode(parts[i])
+    if (code) return { type: 'code', code }
+  }
+
+  // Fall back to searching the entire string
+  const code = findCountryCode(location)
+  if (code) return { type: 'code', code }
+
+  return { type: 'emoji', emoji: '🌍' }
+}
