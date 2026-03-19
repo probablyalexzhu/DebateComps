@@ -193,7 +193,7 @@
     @apply border-border outline-ring/50;
   }
   html {
-    background-color: oklch(from var(--muted) l c h / 0.5);
+    background-color: var(--background);
     overflow-y: scroll;
   }
   body {
