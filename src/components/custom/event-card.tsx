@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { toggleSavedTournament, isTournamentSaved } from "@/lib/saved-tournaments"
 import { generateGoogleCalendarUrl } from "@/lib/calendar-export"
 import { Tournament } from "@/types/tournament"
+import { getTimezoneDiff } from "@/lib/timezone"
 
 interface EventCardProps {
   tournament: Tournament
@@ -130,6 +131,17 @@ export function EventCard({ tournament }: EventCardProps) {
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock className="h-4 w-4 shrink-0" />
               <span className="leading-relaxed">{tournament.timezone}</span>
+              {(() => {
+                const diff = getTimezoneDiff(tournament.timezone)
+                if (!diff) return null
+                const color = diff.direction === 'ahead' ? 'text-sky-600 dark:text-sky-400'
+                  : diff.direction === 'behind' ? 'text-amber-600 dark:text-amber-400'
+                  : 'text-emerald-600 dark:text-emerald-400'
+                return <>
+                  <span className="shrink-0">·</span>
+                  <span className={cn("text-xs", color)}>{diff.label}</span>
+                </>
+              })()}
             </div>
 
             <div className="flex items-center gap-2 text-muted-foreground min-w-0 flex-wrap md:flex-nowrap">
