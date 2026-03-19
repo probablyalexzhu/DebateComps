@@ -9,12 +9,10 @@ export async function GET(request: Request) {
   try {
     let tournaments;
 
-    if (source === 'india') {
-      tournaments = await fetchIndiaTournaments();
-    } else if (source === 'canada') {
-      tournaments = await fetchCanadaTournaments();
-    } else {
-      tournaments = await fetchGlobalTournaments();
+    switch (source) {
+      case 'india':  tournaments = await fetchIndiaTournaments(); break;
+      case 'canada': tournaments = await fetchCanadaTournaments(); break;
+      default:       tournaments = await fetchGlobalTournaments();
     }
 
     const response = NextResponse.json({ tournaments });
