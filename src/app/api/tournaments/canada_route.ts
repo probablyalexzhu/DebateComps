@@ -110,7 +110,7 @@ export async function fetchCanadaTournaments(): Promise<Tournament[]> {
         const expectedFields = Object.values(headerMap);
         expectedFields.forEach(field => { tournament[field] = ''; });
         // Fields not in headerMap that Tournament requires
-        tournament.timezone = 'EDT';
+        tournament.timezone = 'TBA';
         tournament.regLink = '';
         tournament.judgeRule = '';
         tournament.profitStatus = '';
