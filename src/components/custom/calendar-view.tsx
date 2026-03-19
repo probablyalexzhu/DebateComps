@@ -14,7 +14,7 @@ import { useMemo, useState } from 'react'
 
 const localizer = dateFnsLocalizer({
   format,
-  startOfWeek,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
   getDay,
   locales: { 'en-US': enUS },
 })
@@ -88,23 +88,41 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
     setCurrentView(newView)
   }
 
+  const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
+    premier: { bg: '#fbbf24', text: '#451a03' },  // amber-400, amber-950
+    wudc:    { bg: '#06b6d4', text: '#083344' },   // cyan-500, cyan-950
+    large:   { bg: '#34d399', text: '#022c22' },   // emerald-400, emerald-950
+  }
+
   return (
     <>
       <Card className="p-4">
         {/* Legend - only show when colors are visible (not in agenda view) */}
         {currentView !== 'agenda' && (
-          <div className="flex items-center gap-4 pb-4 border-b border-border">
+          <div className="flex items-center gap-4 pb-4 border-b border-border flex-wrap">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-secondary"></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: 'oklch(from var(--secondary) l calc(c * 0.5) h)' }}></div>
               <span className="text-sm text-foreground">Online</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded bg-primary"></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: 'oklch(from var(--primary) l calc(c * 0.5) h)' }}></div>
               <span className="text-sm text-foreground">In-Person</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: '#34d399' }}></div>
+              <span className="text-sm text-foreground">Large Tournament</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: '#fbbf24' }}></div>
+              <span className="text-sm text-foreground">Premier Regional</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: '#06b6d4' }}></div>
+              <span className="text-sm text-foreground">WUDC</span>
             </div>
           </div>
         )}
-        
+
         <div className="h-[600px] min-h-[400px] w-full">
           <Calendar
             localizer={localizer}
@@ -120,9 +138,15 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
             popup
             eventPropGetter={(event: CalendarEvent) => {
               const isOnline = (event.resource.location || '').toLowerCase().includes('online')
-              return {
-                className: isOnline ? 'rbc-event-online' : 'rbc-event-inperson',
+              const style: React.CSSProperties = {
+                backgroundColor: isOnline ? 'oklch(from var(--secondary) l calc(c * 0.5) h)' : 'oklch(from var(--primary) l calc(c * 0.5) h)',
+                color: isOnline ? 'var(--secondary-foreground)' : 'var(--primary-foreground)',
               }
+              const category = event.resource.category
+              if (category && CATEGORY_COLORS[category] && currentView !== 'agenda') {
+                style.borderLeft = `4px solid ${CATEGORY_COLORS[category].bg}`
+              }
+              return { style }
             }}
           />
         </div>
