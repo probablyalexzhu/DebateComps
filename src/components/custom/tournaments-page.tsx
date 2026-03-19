@@ -37,6 +37,7 @@ export function TournamentsPage({ source }: { source: string }) {
     teamCapMax: 400,
     oneDayOnly: false,
     category: null,
+    timezoneProximity: 'any',
   })
 
   const filteredTournaments = useMemo(() => {
