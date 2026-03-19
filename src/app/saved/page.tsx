@@ -7,6 +7,8 @@ import { Calendar, Copy, Info } from 'lucide-react'
 import { getSavedTournaments } from '@/lib/saved-tournaments'
 import { downloadICalFile } from '@/lib/calendar-export'
 import { copyTournamentsToClipboard } from '@/lib/clipboard-copy'
+import { CalendarView } from '@/components/custom/calendar-view'
+import { ViewToggle } from '@/components/custom/view-toggle'
 import type { Tournament } from '@/types/tournament'
 
 export default function SavedPage() {
@@ -15,6 +17,7 @@ export default function SavedPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [copyFeedback, setCopyFeedback] = useState<'idle' | 'copied' | 'error'>('idle')
+  const [viewMode, setViewMode] = useState<'grid' | 'calendar'>('grid')
 
   useEffect(() => {
     async function fetchTournaments() {
@@ -145,11 +148,18 @@ export default function SavedPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {savedTournaments.map((tournament, index) => (
-            <EventCard key={`${tournament.competitionName}-${index}`} tournament={tournament} />
-          ))}
-        </div>
+        <>
+          <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+          {viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {savedTournaments.map((tournament, index) => (
+                <EventCard key={`${tournament.competitionName}-${index}`} tournament={tournament} />
+              ))}
+            </div>
+          ) : (
+            <CalendarView tournaments={savedTournaments} />
+          )}
+        </>
       )}
     </div>
   )

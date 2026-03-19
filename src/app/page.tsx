@@ -5,8 +5,7 @@ import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { startOfWeek, endOfWeek, format, isWithinInterval } from "date-fns";
 
 import { EventCard } from "@/components/custom/event-card";
-import { Button } from "@/components/ui/button";
-import { Grid3x3, Calendar as CalendarIcon, RefreshCw } from "lucide-react";
+import { ViewToggle } from "@/components/custom/view-toggle";
 import { Tournament } from "@/types/tournament";
 import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-bar";
 import { getAbsHourDiff } from "@/lib/timezone";
@@ -257,47 +256,12 @@ export default function Home() {
 
         <SearchFilterBar filters={filters} onFiltersChange={handleFiltersChange} />
 
-        <div className="flex items-center justify-between gap-2 mb-6 border-b">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={cn(
-                "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
-                viewMode === 'grid'
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <Grid3x3 className="h-4 w-4" />
-                Grid View
-              </div>
-            </button>
-            <button
-              onClick={() => setViewMode('calendar')}
-              className={cn(
-                "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
-                viewMode === 'calendar'
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4" />
-                Calendar View
-              </div>
-            </button>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => fetchTournaments(true)}
-            disabled={isRefreshing}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-          </Button>
-        </div>
+        <ViewToggle
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onRefresh={() => fetchTournaments(true)}
+          isRefreshing={isRefreshing}
+        />
 
         {viewMode === 'grid' ? (
           <>
