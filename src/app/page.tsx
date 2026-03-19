@@ -315,7 +315,10 @@ export default function Home() {
                 </div>
               ) : (
                 <div key={section.label} className="mb-12">
-                  <h2 className="text-2xl font-semibold mb-4 text-foreground font-serif tracking-tight">
+                  <h2 className={cn(
+                    "text-2xl font-semibold mb-4 text-foreground font-serif tracking-tight",
+                    section.tournaments[0]?.category && "mb-7 md:mb-4"
+                  )}>
                     {section.label} ({section.tournaments.length})
                   </h2>
                   <div className={GRID_CLASSNAME}>
