@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { fetchGlobalTournaments } from './global_route';
 import { fetchIndiaTournaments } from './india_route';
+import { fetchCanadaTournaments } from './canada_route';
 
 export async function GET(request: Request) {
   const source = new URL(request.url).searchParams.get('source') ?? 'global';
@@ -10,6 +11,8 @@ export async function GET(request: Request) {
 
     if (source === 'india') {
       tournaments = await fetchIndiaTournaments();
+    } else if (source === 'canada') {
+      tournaments = await fetchCanadaTournaments();
     } else {
       tournaments = await fetchGlobalTournaments();
     }
