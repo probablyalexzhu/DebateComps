@@ -194,7 +194,7 @@
   }
   html {
     background-color: oklch(from var(--muted) l c h / 0.5);
-    scrollbar-color: var(--border) transparent;
+    overflow-y: scroll;
   }
   body {
     @apply bg-background text-foreground;
@@ -208,7 +208,7 @@
     height: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--background);
   }
   ::-webkit-scrollbar-thumb {
     background-color: var(--border);
