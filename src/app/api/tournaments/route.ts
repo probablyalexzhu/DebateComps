@@ -149,8 +149,11 @@ export async function GET() {
                 value = extractCellValue(cells[i]);
               }
 
-              if (propertyName === 'judgeRule' || propertyName === 'timezone') {
+              if (propertyName === 'timezone') {
                 value = value.replace(/\s+/g, '');
+              }
+              if (propertyName === 'judgeRule') {
+                value = value.replace(/\s*([=+\-])\s*/g, '$1');
               }
 
               if (propertyName === 'date') {
