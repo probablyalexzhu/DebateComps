@@ -20,7 +20,15 @@ type TournamentSection = { label: string; tournaments: Tournament[] };
 
 const GRID_CLASSNAME = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6";
 
+const SOURCE_LABEL: Record<string, string> = {
+  india: 'India',
+  canada: 'Canada',
+};
+
 export function TournamentsPage({ source }: { source: string }) {
+  const sourceLabel = SOURCE_LABEL[source];
+  const pageTitle = `{pageTitle}${sourceLabel ? ` in ${sourceLabel}` : ''}`;
+
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -204,7 +212,7 @@ export function TournamentsPage({ source }: { source: string }) {
         <div className="container mx-auto px-4 py-8">
           <header className="mb-8">
             <div className="flex flex-col justify-center py-6">
-              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps — The home for debate</h1>
+              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">{pageTitle}</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
           </header>
@@ -222,7 +230,7 @@ export function TournamentsPage({ source }: { source: string }) {
         <div className="container mx-auto px-4 py-8">
           <header className="mb-8">
             <div className="flex flex-col justify-center py-6">
-              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps — The home for debate</h1>
+              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">{pageTitle}</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
           </header>
@@ -242,7 +250,7 @@ export function TournamentsPage({ source }: { source: string }) {
       <div className="container mx-auto px-4 py-8">
         <header className="mb-10">
           <div className="flex flex-col justify-center pt-10 pb-6">
-            <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">DebateComps — The home for debate</h1>
+            <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">{pageTitle}</h1>
             <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
           </div>
         </header>
