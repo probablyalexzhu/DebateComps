@@ -253,7 +253,7 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                 <Label className="text-sm font-medium md:!mt-6">Timezone</Label>
                 <div className="flex flex-wrap gap-2">
                   {([
-                    { value: 'any', label: 'Any' },
+                    { value: 'any', label: 'Any', color: '' },
                     { value: 'same', label: 'Same', color: 'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-400 dark:border-emerald-700' },
                     { value: 'close', label: '±1–3h', color: 'bg-sky-100 text-sky-700 border-sky-300 dark:bg-sky-900/40 dark:text-sky-400 dark:border-sky-700' },
                     { value: 'far', label: '±4–8h', color: 'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/40 dark:text-amber-400 dark:border-amber-700' },
