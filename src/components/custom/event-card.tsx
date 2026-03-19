@@ -176,13 +176,13 @@ export function EventCard({ tournament }: EventCardProps) {
             </Button>
           )}
           {tournament.infoLink && tournament.infoLink !== "TBA" && tournament.infoLink.trim() !== "" ? (
-            <Button asChild variant="outline" size="sm" className="flex-1 bg-transparent">
+            <Button asChild variant="outline" size="sm" className="flex-1">
               <a href={tournament.infoLink} target="_blank" rel="noopener noreferrer">
                 More Info
               </a>
             </Button>
           ) : (
-            <Button variant="outline" size="sm" className="flex-1 bg-transparent opacity-50 cursor-not-allowed" disabled>
+            <Button variant="outline" size="sm" className="flex-1 opacity-50 cursor-not-allowed" disabled>
               More Info
             </Button>
           )}
