@@ -247,9 +247,9 @@
 
 
 /* React Big Calendar Custom Styles */
-.rbc-calendar *,
-.rbc-calendar *::before,
-.rbc-calendar *::after {
+.rbc-calendar *:not(.rbc-event),
+.rbc-calendar *:not(.rbc-event)::before,
+.rbc-calendar *:not(.rbc-event)::after {
   border-color: var(--border) !important;
 }
 
@@ -405,6 +405,17 @@
 
 .rbc-date-cell > a {
   color: var(--foreground) !important;
+}
+
+.rbc-date-cell.rbc-now > * {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+  background-color: var(--accent) !important;
+  color: var(--accent-foreground) !important;
+  font-weight: 600 !important;
+  padding: 0 0.25rem !important;
 }
 
 /* Day View Styles */
