@@ -292,7 +292,7 @@ export default function Home() {
           <>
             {sections.map((section) =>
               section.label === "This Week" ? (
-                <div key={section.label} className="this-week-banner mb-8 py-8">
+                <div key={section.label} className="this-week-banner mb-8 pt-8 pb-12">
                   <h2 className="text-2xl font-semibold mb-6 text-white font-serif tracking-tight">
                     {section.label} ({section.tournaments.length})
                   </h2>
