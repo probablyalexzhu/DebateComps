@@ -5,12 +5,10 @@ import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { startOfWeek, endOfWeek, format, isWithinInterval } from "date-fns";
 
 import { EventCard } from "@/components/custom/event-card";
-import { Button } from "@/components/ui/button";
-import { Grid3x3, Calendar as CalendarIcon, RefreshCw } from "lucide-react";
+import { ViewToggle } from "@/components/custom/view-toggle";
 import { Tournament } from "@/types/tournament";
 import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-bar";
 import { CalendarView } from "@/components/custom/calendar-view";
-import { cn } from "@/lib/utils";
 import { parseTournamentDateRange } from "@/lib/calendar-export";
 
 const ITEMS_PER_BATCH = 16;
@@ -25,9 +23,23 @@ const SOURCE_LABEL: Record<string, string> = {
   canada: 'Canada',
 };
 
+/**
+ * TournamentsPage is the shared page component rendered by all source routes
+ * (/, /india, /canada). It accepts a `source` prop which is passed to the
+ * /api/tournaments?source= endpoint to fetch the appropriate dataset.
+ *
+ * Responsibilities:
+ * - Fetches and paginates tournaments (infinite scroll via IntersectionObserver)
+ * - Manages filter state (search, format, online, team cap, one-day, category, timezone)
+ * - Filters persist across source switches; visibleCount resets on source change
+ * - Sections tournaments into "This Week" and month groups
+ * - Renders grid view (EventCard) or calendar view (CalendarView)
+ * - Supports manual cache-bypass refresh via ViewToggle
+ * - Customises the page title per source (e.g. "...in India", "...in Canada")
+ */
 export function TournamentsPage({ source }: { source: string }) {
   const sourceLabel = SOURCE_LABEL[source];
-  const pageTitle = `{pageTitle}${sourceLabel ? ` in ${sourceLabel}` : ''}`;
+  const pageTitle = `DebateComps — The home for debate${sourceLabel ? ` in ${sourceLabel}` : ''}`;
 
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState(true);
@@ -208,10 +220,10 @@ export function TournamentsPage({ source }: { source: string }) {
 
   if (loading) {
     return (
-      <div className="bg-background overflow-y-scroll">
+      <div className="bg-background">
         <div className="container mx-auto px-4 py-8">
-          <header className="mb-8">
-            <div className="flex flex-col justify-center py-6">
+          <header className="mb-10">
+            <div className="flex flex-col justify-center pt-10 pb-6">
               <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">{pageTitle}</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
@@ -226,10 +238,10 @@ export function TournamentsPage({ source }: { source: string }) {
 
   if (error) {
     return (
-      <div className="bg-background overflow-y-scroll">
+      <div className="bg-background">
         <div className="container mx-auto px-4 py-8">
-          <header className="mb-8">
-            <div className="flex flex-col justify-center py-6">
+          <header className="mb-10">
+            <div className="flex flex-col justify-center pt-10 pb-6">
               <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">{pageTitle}</h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
             </div>
@@ -257,53 +269,18 @@ export function TournamentsPage({ source }: { source: string }) {
 
         <SearchFilterBar filters={filters} onFiltersChange={handleFiltersChange} />
 
-        <div className="flex items-center justify-between gap-2 mb-6 border-b">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={cn(
-                "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
-                viewMode === 'grid'
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <Grid3x3 className="h-4 w-4" />
-                Grid View
-              </div>
-            </button>
-            <button
-              onClick={() => setViewMode('calendar')}
-              className={cn(
-                "px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px",
-                viewMode === 'calendar'
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <CalendarIcon className="h-4 w-4" />
-                Calendar View
-              </div>
-            </button>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => fetchTournaments(true)}
-            disabled={isRefreshing}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <RefreshCw className={cn("h-4 w-4", isRefreshing && "animate-spin")} />
-          </Button>
-        </div>
+        <ViewToggle
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          onRefresh={() => fetchTournaments(true)}
+          isRefreshing={isRefreshing}
+        />
 
         {viewMode === 'grid' ? (
           <>
             {sections.map((section) =>
               section.label === "This Week" ? (
-                <div key={section.label} className="this-week-banner mb-8 py-8">
+                <div key={section.label} className="this-week-banner mb-8 pt-8 pb-12">
                   <h2 className="text-2xl font-semibold mb-6 text-white font-serif tracking-tight">
                     {section.label} ({section.tournaments.length})
                   </h2>
@@ -315,7 +292,7 @@ export function TournamentsPage({ source }: { source: string }) {
                 </div>
               ) : (
                 <div key={section.label} className="mb-12">
-                  <h2 className="text-2xl font-semibold mb-4 text-foreground font-serif tracking-tight">
+                  <h2 className={`text-2xl font-semibold text-foreground font-serif tracking-tight ${section.tournaments[0]?.category ? "mb-7 md:mb-4" : "mb-4"}`}>
                     {section.label} ({section.tournaments.length})
                   </h2>
                   <div className={GRID_CLASSNAME}>
