@@ -4,9 +4,9 @@ import { CellData, extractCellValue, extractCellLink, getCategoryFromColor } fro
 const CATEGORY_COLORS: { hex: string; category: string }[] = [
   { hex: '#d9d2e9', category: 'premier' }, // International Title
   { hex: '#fff3cc', category: 'premier' }, // National Title
-  { hex: '#f4cdcc', category: 'premier' }, // East Title
-  { hex: '#d9ebd3', category: 'premier' }, // Central Title
-  { hex: '#c9dbf8', category: 'premier' }, // West Title
+  // { hex: '#f4cdcc', category: '' },     // East Title
+  // { hex: '#d9ebd3', category: '' },     // Central Title
+  // { hex: '#c9dbf8', category: '' },     // West Title
   { hex: '#d9d9d9', category: 'large' },   // International Major
 ];
 
