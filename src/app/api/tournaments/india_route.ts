@@ -164,14 +164,12 @@ export async function fetchIndiaTournaments(): Promise<Tournament[]> {
             tournament[propertyName] = value;
           });
 
-          // Combine mode + institution + city into location
+          // Combine mode + city into location (institution omitted from display)
           const mode = tournament._mode || '';
-          const institution = tournament._institution || '';
           const city = tournament._city || '';
-          const cityAlreadyInInstitution = city && institution.toLowerCase().endsWith(city.toLowerCase());
           tournament.location = mode === 'Online'
             ? 'Online'
-            : [institution, cityAlreadyInInstitution ? '' : city].filter(Boolean).join(', ');
+            : ['In person', city, 'India'].filter(Boolean).join(', ');
           delete tournament._mode;
           delete tournament._institution;
           delete tournament._city;

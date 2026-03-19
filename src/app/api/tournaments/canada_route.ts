@@ -78,6 +78,28 @@ const headerMap: { [key: string]: string } = {
 
 const linkFields = new Set(['infoLink']);
 
+const INSTITUTION_MAP: { match: string; location: string; timezone: string }[] = [
+  { match: 'calgary',          location: 'Calgary, Alberta, Canada',  timezone: 'MDT' },
+  { match: 'waterloo',         location: 'Waterloo, Ontario, Canada', timezone: 'EDT' },
+  { match: 'mcgill',           location: 'Montreal, Quebec, Canada',  timezone: 'EDT' },
+  { match: 'british columbia', location: 'Vancouver, BC, Canada',     timezone: 'PDT' },
+  { match: 'british colombia', location: 'Vancouver, BC, Canada',     timezone: 'PDT' },
+  { match: 'dalhousie',        location: 'Halifax, NS, Canada',       timezone: 'ADT' },
+  { match: 'queen',            location: 'Kingston, Ontario, Canada', timezone: 'EDT' },
+  { match: 'toronto',          location: 'Toronto, Ontario, Canada',  timezone: 'EDT' },
+  { match: 'uottawa',          location: 'Ottawa, Ontario, Canada',   timezone: 'EDT' },
+  { match: 'ottawa',           location: 'Ottawa, Ontario, Canada',   timezone: 'EDT' },
+  { match: 'eds',              location: 'Ottawa, Ontario, Canada',   timezone: 'EDT' },
+];
+
+function resolveCanadaInfo(institution: string): { location: string; timezone: string } | null {
+  const lower = institution.toLowerCase();
+  for (const { match, location, timezone } of INSTITUTION_MAP) {
+    if (lower.includes(match)) return { location, timezone };
+  }
+  return null;
+}
+
 // Month separator rows in the sheet mark the passage of time across 2025-2026.
 // We track these to know which year to append to date strings.
 const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)$/i;
@@ -144,7 +166,7 @@ export async function fetchCanadaTournaments(): Promise<Tournament[]> {
         const expectedFields = Object.values(headerMap);
         expectedFields.forEach(field => { tournament[field] = ''; });
         // Fields not in headerMap that Tournament requires
-        tournament.timezone = '';
+        tournament.timezone = 'EDT';
         tournament.regLink = '';
         tournament.judgeRule = '';
         tournament.profitStatus = '';
@@ -183,10 +205,12 @@ export async function fetchCanadaTournaments(): Promise<Tournament[]> {
           tournament[propertyName] = value;
         });
 
-        // Combine mode + institution into location (consistent with india_route)
+        // Combine mode + institution into location, mapping known institutions to city/province
         const mode = tournament._mode || '';
         const institution = tournament._institution || '';
-        tournament.location = mode === 'Online' ? 'Online' : institution;
+        const resolved = resolveCanadaInfo(institution);
+        tournament.location = mode === 'Online' ? 'Online' : `In person, ${resolved ? resolved.location : institution}`;
+        if (resolved) tournament.timezone = resolved.timezone;
         delete tournament._mode;
         delete tournament._institution;
 

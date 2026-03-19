@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
+import { CountryToggle } from "./country-toggle";
 
 export function SiteHeader() {
   const navItems = [
@@ -35,6 +36,7 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <CountryToggle />
           <ThemeToggle />
         </nav>
       </div>
