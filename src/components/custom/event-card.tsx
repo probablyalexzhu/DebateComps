@@ -24,7 +24,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; bg: string; tabColor: str
 function getFormatChipStyle(format: string) {
   const f = format.toUpperCase().trim()
   if (f.includes('BP')) return 'bg-secondary/40 text-secondary-foreground border-secondary/60'
-  if (f.includes('AP')) return 'bg-accent/40 text-accent border-accent/60'
+  if (f.includes('AP')) return 'bg-accent/40 text-amber-900 dark:text-amber-100 border-accent/60'
   return 'bg-muted text-muted-foreground'
 }
 
