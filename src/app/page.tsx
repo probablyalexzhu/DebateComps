@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Grid3x3, Calendar as CalendarIcon, RefreshCw } from "lucide-react";
 import { Tournament } from "@/types/tournament";
 import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-bar";
+import { getAbsHourDiff } from "@/lib/timezone";
 import { CalendarView } from "@/components/custom/calendar-view";
 import { cn } from "@/lib/utils";
 import { parseTournamentDateRange } from "@/lib/calendar-export";
@@ -37,6 +38,7 @@ export default function Home() {
     teamCapMax: 400,
     oneDayOnly: false,
     category: null,
+    timezoneProximity: 'any',
   })
 
   const filteredTournaments = useMemo(() => {
@@ -88,6 +90,15 @@ export default function Home() {
         }
       }
       // If teamCap is N/A or invalid, include it in results
+
+      // Timezone proximity filter
+      if (filters.timezoneProximity !== 'any') {
+        const diff = getAbsHourDiff(tournament.timezone || '')
+        if (diff === null) return false
+        if (filters.timezoneProximity === 'same' && diff > 0) return false
+        if (filters.timezoneProximity === 'close' && (diff < 1 || diff > 3)) return false
+        if (filters.timezoneProximity === 'far' && (diff < 4 || diff > 8)) return false
+      }
 
       return true
     })

@@ -9,6 +9,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { Search, SlidersHorizontal, X } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { cn } from "@/lib/utils"
+
+export type TimezoneProximity = 'any' | 'same' | 'close' | 'far'
 
 export interface FilterState {
   searchText: string
@@ -18,6 +21,7 @@ export interface FilterState {
   teamCapMax: number
   oneDayOnly: boolean
   category: string | null
+  timezoneProximity: TimezoneProximity
 }
 
 interface SearchFilterBarProps {
@@ -74,6 +78,7 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
       teamCapMax: 400,
       oneDayOnly: false,
       category: null,
+      timezoneProximity: 'any',
     })
     setIsOpen(false)
   }
@@ -85,7 +90,8 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
     filters.teamCapMin !== 0 ||
     filters.teamCapMax !== 400 ||
     filters.oneDayOnly ||
-    filters.category !== null
+    filters.category !== null ||
+    filters.timezoneProximity !== 'any'
 
   return (
     <div className="space-y-4 mb-8">
@@ -243,6 +249,36 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                   <span>0</span>
                   <span>400</span>
                 </div>
+
+                <Label className="text-sm font-medium md:!mt-6">Timezone</Label>
+                <div className="flex flex-wrap gap-2">
+                  {([
+                    { value: 'any', label: 'Any' },
+                    { value: 'same', label: 'Same', color: 'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-400 dark:border-emerald-700' },
+                    { value: 'close', label: '±1–3h', color: 'bg-sky-100 text-sky-700 border-sky-300 dark:bg-sky-900/40 dark:text-sky-400 dark:border-sky-700' },
+                    { value: 'far', label: '±4–8h', color: 'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/40 dark:text-amber-400 dark:border-amber-700' },
+                  ] as const).map(({ value, label, color }) => (
+                    <button
+                      key={value}
+                      onClick={() => onFiltersChange({ ...filters, timezoneProximity: value })}
+                      className={cn(
+                        "px-3 py-1 text-sm rounded-full border transition-colors cursor-pointer",
+                        filters.timezoneProximity === value
+                          ? color || 'bg-foreground text-background border-foreground'
+                          : 'bg-transparent text-muted-foreground border-border hover:border-foreground/30'
+                      )}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">Relative to you ({(() => {
+                  const offset = -new Date().getTimezoneOffset()
+                  const sign = offset >= 0 ? '+' : '-'
+                  const h = Math.floor(Math.abs(offset) / 60)
+                  const m = Math.abs(offset) % 60
+                  return `GMT${sign}${h}${m ? `:${String(m).padStart(2, '0')}` : ''}`
+                })()})</p>
               </div>
             </div>
           </div>
