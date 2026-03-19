@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, CircleDollarSign, Gavel, Bookmark } from "lucide-react"
+import { Calendar, MapPin, CircleDollarSign, Bookmark, Clock } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { getCountryFlag } from "@/lib/country-flags"
 import { cn } from "@/lib/utils"
 import { toggleSavedTournament, isTournamentSaved } from "@/lib/saved-tournaments"
@@ -118,9 +119,7 @@ export function EventCard({ tournament }: EventCardProps) {
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4 shrink-0" />
-              <span className="leading-relaxed">
-                {tournament.date} • {tournament.timezone}
-              </span>
+              <span className="leading-relaxed">{tournament.date}</span>
             </div>
 
             <div className="flex items-start gap-2 text-muted-foreground">
@@ -128,18 +127,26 @@ export function EventCard({ tournament }: EventCardProps) {
               <span className="leading-relaxed">{tournament.location}</span>
             </div>
 
-            <div className="flex items-start gap-2 text-muted-foreground">
-              <CircleDollarSign className="h-4 w-4 shrink-0 mt-0.5" />
-              <span className="leading-relaxed">
-                {tournament.fees?.trim() || "TBA"}
-              </span>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock className="h-4 w-4 shrink-0" />
+              <span className="leading-relaxed">{tournament.timezone}</span>
             </div>
 
-            <div className="flex items-start gap-2 text-muted-foreground">
-              <Gavel className="h-4 w-4 shrink-0 mt-0.5" />
-              <span className="leading-relaxed truncate">
-                {tournament.judgeRule?.trim() || "TBA"}
-              </span>
+            <div className="flex items-center gap-2 text-muted-foreground min-w-0 flex-wrap md:flex-nowrap">
+              <CircleDollarSign className="h-4 w-4 shrink-0" />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="md:truncate">{tournament.fees?.trim() || "TBA"}</span>
+                </TooltipTrigger>
+                <TooltipContent>{tournament.fees?.trim() || "TBA"}</TooltipContent>
+              </Tooltip>
+              <span className="shrink-0">•</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="md:truncate md:min-w-10">{tournament.judgeRule?.trim() || "TBA"}</span>
+                </TooltipTrigger>
+                <TooltipContent>{tournament.judgeRule?.trim() || "TBA"}</TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>

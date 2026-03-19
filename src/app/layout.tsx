@@ -4,6 +4,7 @@ import "./globals.css";
 import { Footer } from "@/components/custom/footer";
 import { SiteHeader } from "@/components/custom/site-header";
 import { ThemeProvider } from "@/lib/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Analytics } from "@vercel/analytics/next"
 
 const montserrat = Montserrat({
@@ -46,6 +47,7 @@ export default function RootLayout({
         className={`${montserrat.variable} ${karla.variable} antialiased`}
       >
         <ThemeProvider>
+        <TooltipProvider>
           <div className="min-h-screen flex flex-col">
             <SiteHeader />
             <main className="flex-1">
@@ -54,6 +56,7 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
+        </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
