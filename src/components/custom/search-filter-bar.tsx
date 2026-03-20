@@ -69,6 +69,10 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
     filters.timezoneProximity !== 'any',
   ].filter(Boolean).length
 
+  const chipBase = "h-8 px-3 text-sm rounded-full border transition-colors cursor-pointer"
+  const chipActive = "bg-foreground text-background border-foreground"
+  const chipInactive = "bg-transparent text-muted-foreground border-border hover:bg-muted hover:text-foreground hover:border-foreground/40"
+
   const categoryOptions = [
     { value: "large", label: "Large" },
     { value: "premier", label: "Premier Regional" },
@@ -111,10 +115,10 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                 })
               }}
               className={cn(
-                "h-8 px-3 text-sm rounded-full border transition-colors cursor-pointer whitespace-nowrap",
+                chipBase, "whitespace-nowrap",
                 (filters.isOnline === true && value === "online") || (filters.isOnline === false && value === "in-person")
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-transparent text-muted-foreground border-border hover:border-foreground/30"
+                  ? chipActive
+                  : chipInactive
               )}
             >
               {label}
@@ -130,10 +134,10 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
               key={value}
               onClick={() => onFiltersChange({ ...filters, format: filters.format === value ? null : value })}
               className={cn(
-                "h-8 px-3 text-sm rounded-full border transition-colors cursor-pointer whitespace-nowrap",
+                chipBase, "whitespace-nowrap",
                 filters.format === value
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-transparent text-muted-foreground border-border hover:border-foreground/30"
+                  ? chipActive
+                  : chipInactive
               )}
             >
               {label}
@@ -183,10 +187,10 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                     })
                   }}
                   className={cn(
-                    "h-8 px-3 text-sm rounded-full border transition-colors cursor-pointer",
+                    chipBase,
                     (filters.isOnline === true && value === "online") || (filters.isOnline === false && value === "in-person")
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-transparent text-muted-foreground border-border hover:border-foreground/30"
+                      ? chipActive
+                      : chipInactive
                   )}
                 >
                   {label}
@@ -200,10 +204,10 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                   key={value}
                   onClick={() => onFiltersChange({ ...filters, format: filters.format === value ? null : value })}
                   className={cn(
-                    "h-8 px-3 text-sm rounded-full border transition-colors cursor-pointer",
+                    chipBase,
                     filters.format === value
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-transparent text-muted-foreground border-border hover:border-foreground/30"
+                      ? chipActive
+                      : chipInactive
                   )}
                 >
                   {label}
@@ -218,10 +222,10 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                   key={value}
                   onClick={() => onFiltersChange({ ...filters, category: filters.category === value ? null : value })}
                   className={cn(
-                    "h-8 px-3 text-sm rounded-full border transition-colors cursor-pointer",
+                    chipBase,
                     filters.category === value
-                      ? "bg-foreground text-background border-foreground"
-                      : "bg-transparent text-muted-foreground border-border hover:border-foreground/30"
+                      ? chipActive
+                      : chipInactive
                   )}
                 >
                   {label}
@@ -231,10 +235,10 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
               <button
                 onClick={() => handleOneDayChange(!filters.oneDayOnly)}
                 className={cn(
-                  "h-8 px-3 text-sm rounded-full border transition-colors cursor-pointer",
+                  chipBase,
                   filters.oneDayOnly
-                    ? "bg-foreground text-background border-foreground"
-                    : "bg-transparent text-muted-foreground border-border hover:border-foreground/30"
+                    ? chipActive
+                    : chipInactive
                 )}
               >
                 One-day Only
@@ -253,10 +257,10 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
                   key={value}
                   onClick={() => onFiltersChange({ ...filters, timezoneProximity: value })}
                   className={cn(
-                    "h-8 px-3 text-sm rounded-full border transition-colors cursor-pointer",
+                    chipBase,
                     filters.timezoneProximity === value
-                      ? color || 'bg-foreground text-background border-foreground'
-                      : 'bg-transparent text-muted-foreground border-border hover:border-foreground/30'
+                      ? color || chipActive
+                      : chipInactive
                   )}
                 >
                   {label}
