@@ -113,7 +113,7 @@ export async function fetchIndiaTournaments(): Promise<Tournament[]> {
           const city = tournament._city || '';
           tournament.location = mode === 'Online'
             ? 'Online'
-            : ['In person', city, 'India'].filter(Boolean).join(', ');
+            : [city, 'India'].filter(Boolean).join(', ');
           delete tournament._mode;
           delete tournament._institution;
           delete tournament._city;

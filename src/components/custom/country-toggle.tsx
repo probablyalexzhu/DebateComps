@@ -7,18 +7,20 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 const SOURCES = [
   { href: "/",        label: "Global",  flagCode: null },
-  { href: "/india",   label: "India",   flagCode: "in" },
   { href: "/canada",  label: "Canada",  flagCode: "ca" },
+  { href: "/india",   label: "India",   flagCode: "in" },
 ];
 
 function FlagIcon({ code, className }: { code: string | null; className?: string }) {
-  if (!code) return <Globe className={className ?? "h-4 w-4"} />;
-  return <span className={`fi fi-${code} rounded-sm`} style={{ fontSize: '1rem' }} />;
+  if (!code) return <span className="inline-flex justify-center" style={{ width: '1.33rem' }}><Globe className={className ?? "h-4 w-4"} /></span>;
+  return <span className={`fi fi-${code} rounded-[0.25rem]`} style={{ fontSize: '1rem' }} />;
 }
 
 export function CountryToggle() {
@@ -33,6 +35,8 @@ export function CountryToggle() {
         <ChevronDown className="h-3.5 w-3.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Select Source</DropdownMenuLabel>
+        <DropdownMenuSeparator />
         {SOURCES.map(({ href, label, flagCode }) => (
           <DropdownMenuItem key={href} asChild>
             <Link href={href} className="flex items-center gap-2 cursor-pointer">

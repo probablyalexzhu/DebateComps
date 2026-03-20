@@ -56,7 +56,7 @@ export function getCategoryFromColor(
   if (!bg) return '';
   const hex = rgbToHex(bg.red ?? 0, bg.green ?? 0, bg.blue ?? 0);
   for (const { hex: target, category } of categoryColors) {
-    if (colorDistance(hex, target) < 15) return category;
+    if (colorDistance(hex, target) < 30) return category;
   }
   return '';
 }

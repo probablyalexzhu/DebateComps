@@ -153,7 +153,7 @@ export async function fetchCanadaTournaments(): Promise<Tournament[]> {
         const mode = tournament._mode || '';
         const institution = tournament._institution || '';
         const resolved = resolveCanadaInfo(institution);
-        tournament.location = mode === 'Online' ? 'Online' : `In person, ${resolved ? resolved.location : institution}`;
+        tournament.location = mode === 'Online' ? 'Online' : (resolved ? resolved.location : institution);
         if (resolved) tournament.timezone = resolved.timezone;
         delete tournament._mode;
         delete tournament._institution;

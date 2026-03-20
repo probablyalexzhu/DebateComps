@@ -18,9 +18,10 @@ type TournamentSection = { label: string; tournaments: Tournament[] };
 
 const GRID_CLASSNAME = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6";
 
-const SOURCE_LABEL: Record<string, string> = {
-  india: 'India',
-  canada: 'Canada',
+const SOURCE_INFO: Record<string, { label: string; flagCode: string; sheetName: string; sheetUrl: string }> = {
+  global: { label: '', flagCode: '', sheetName: 'Global Debating Spreadsheet', sheetUrl: 'https://docs.google.com/spreadsheets/d/1R9s3MAh1H_7rJ9NQhO18p6o7bvekrIDTk27l7emXk6o' },
+  india: { label: 'India', flagCode: 'in', sheetName: 'Indian Debating Spreadsheet', sheetUrl: 'https://docs.google.com/spreadsheets/d/1_LlgPi3rxGRpqr2AvP3Ngx1WjkDkarIkQqAn2itMceg' },
+  canada: { label: 'Canada', flagCode: 'ca', sheetName: 'CUSID University Schedule 2025–2026', sheetUrl: 'https://docs.google.com/spreadsheets/d/1rc_ozfJbcZlrYAjWeMcIkN9E_uvJet9HX42M1wX4yzY' },
 };
 
 /**
@@ -38,8 +39,8 @@ const SOURCE_LABEL: Record<string, string> = {
  * - Customises the page title per source (e.g. "...in India", "...in Canada")
  */
 export function TournamentsPage({ source }: { source: string }) {
-  const sourceLabel = SOURCE_LABEL[source];
-  const pageTitle = `DebateComps — The home for debate${sourceLabel ? ` in ${sourceLabel}` : ''}`;
+  const sourceInfo = SOURCE_INFO[source] || SOURCE_INFO.global;
+  const pageTitle = `DebateComps — The home for debate${sourceInfo.label ? ` in ${sourceInfo.label}` : ''}`;
 
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState(true);
@@ -224,8 +225,12 @@ export function TournamentsPage({ source }: { source: string }) {
         <div className="container mx-auto px-4 py-8">
           <header className="mb-10">
             <div className="flex flex-col justify-center pt-10 pb-6">
-              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">{pageTitle}</h1>
+              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">
+                {pageTitle}
+                {sourceInfo.flagCode && <span className={`fi fi-${sourceInfo.flagCode} rounded-[0.375rem] ml-3 align-middle relative -top-[0.25rem]`} style={{ fontSize: '1.75rem' }} />}
+              </h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
+              <p className="text-xs text-muted-foreground/70 mt-2">Data from <a href={sourceInfo.sheetUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">{sourceInfo.sheetName}</a></p>
             </div>
           </header>
           <div className="flex items-center justify-center py-12">
@@ -242,8 +247,12 @@ export function TournamentsPage({ source }: { source: string }) {
         <div className="container mx-auto px-4 py-8">
           <header className="mb-10">
             <div className="flex flex-col justify-center pt-10 pb-6">
-              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">{pageTitle}</h1>
+              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">
+                {pageTitle}
+                {sourceInfo.flagCode && <span className={`fi fi-${sourceInfo.flagCode} rounded-[0.375rem] ml-3 align-middle relative -top-[0.25rem]`} style={{ fontSize: '1.75rem' }} />}
+              </h1>
               <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
+              <p className="text-xs text-muted-foreground/70 mt-2">Data from <a href={sourceInfo.sheetUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">{sourceInfo.sheetName}</a></p>
             </div>
           </header>
           <div className="flex items-center justify-center py-12">
@@ -262,8 +271,12 @@ export function TournamentsPage({ source }: { source: string }) {
       <div className="container mx-auto px-4 py-8">
         <header className="mb-10">
           <div className="flex flex-col justify-center pt-10 pb-6">
-            <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">{pageTitle}</h1>
+            <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">
+              {pageTitle}
+              {sourceInfo.flagCode && <span className={`fi fi-${sourceInfo.flagCode} rounded-[0.375rem] ml-3 align-middle relative -top-[0.25rem]`} style={{ fontSize: '1.75rem' }} />}
+            </h1>
             <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
+            <p className="text-xs text-muted-foreground/70 mt-2">Data from <a href={sourceInfo.sheetUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">{sourceInfo.sheetName}</a></p>
           </div>
         </header>
 
