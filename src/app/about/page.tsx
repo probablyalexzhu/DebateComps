@@ -37,11 +37,9 @@ export default function AboutPage() {
           <section>
             <h2 className="text-lg font-semibold mb-2">Something broken?</h2>
             <p className="text-muted-foreground leading-relaxed">
-              DebateComps reads directly from the spreadsheets. If the site is
-              showing errors or missing data, it&apos;s likely that a spreadsheet
-              was edited in a way the site doesn&apos;t expect (e.g. merged cells,
-              renamed columns, moved headers). Fixing the spreadsheet will fix
-              the site — no code changes needed.
+              The site reads directly from the spreadsheets. If data looks wrong,
+              it&apos;s usually a formatting issue in the sheet (merged cells, renamed columns, etc.).
+              Fixing the spreadsheet fixes the site — no code changes needed.
             </p>
           </section>
 
@@ -49,11 +47,7 @@ export default function AboutPage() {
             <h2 className="text-lg font-semibold mb-2">Built by</h2>
             <p className="text-muted-foreground leading-relaxed">
               <a href="https://probablyalex.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Alex Zhu</a>
-              , Aditya Keerthi, Barton Lu, Acon Lin, and Advait Sangle — making
-              it easier for the debate community to discover opportunities from
-              around the world.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-3">
+              , Aditya Keerthi, Barton Lu, Acon Lin, and Advait Sangle.{" "}
               <a href="https://github.com/probablyalexzhu/DebateComps" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">View on GitHub</a>
             </p>
           </section>

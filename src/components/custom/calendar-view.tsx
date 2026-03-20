@@ -89,9 +89,9 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
   }
 
   const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
-    premier: { bg: '#fbbf24', text: '#451a03' },  // amber-400, amber-950
-    wudc:    { bg: '#06b6d4', text: '#083344' },   // cyan-500, cyan-950
-    large:   { bg: '#34d399', text: '#022c22' },   // emerald-400, emerald-950
+    premier: { bg: 'var(--tab-premier)', text: 'var(--tab-premier-text)' },
+    wudc:    { bg: 'var(--tab-wudc)',    text: 'var(--tab-wudc-text)' },
+    large:   { bg: 'var(--tab-large)',   text: 'var(--tab-large-text)' },
   }
 
   return (
@@ -109,15 +109,15 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
               <span className="text-sm text-foreground">In-Person</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: '#34d399' }}></div>
+              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: 'var(--tab-large)' }}></div>
               <span className="text-sm text-foreground">Large Tournament</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: '#fbbf24' }}></div>
+              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: 'var(--tab-premier)' }}></div>
               <span className="text-sm text-foreground">Premier Regional</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: '#06b6d4' }}></div>
+              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: 'var(--tab-wudc)' }}></div>
               <span className="text-sm text-foreground">WUDC</span>
             </div>
           </div>
