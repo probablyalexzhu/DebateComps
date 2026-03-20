@@ -2,13 +2,17 @@
 
 import { useEffect, useState } from 'react'
 import { EventCard } from '@/components/custom/event-card'
+import { PastSection } from '@/components/custom/past-section'
 import { Button } from '@/components/ui/button'
 import { Calendar, Copy, Info } from 'lucide-react'
 import { getSavedTournaments } from '@/lib/saved-tournaments'
 import { downloadICalFile } from '@/lib/calendar-export'
+import { SOURCE_LIST } from '@/lib/sources'
 import { copyTournamentsToClipboard } from '@/lib/clipboard-copy'
 import { CalendarView } from '@/components/custom/calendar-view'
 import { ViewToggle } from '@/components/custom/view-toggle'
+import { usePastUpcoming } from '@/lib/use-past-upcoming'
+import { getTournamentId } from '@/lib/tournament-id'
 import type { Tournament } from '@/types/tournament'
 
 export default function SavedPage() {
@@ -20,35 +24,39 @@ export default function SavedPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'calendar'>('grid')
 
   useEffect(() => {
-    async function fetchTournaments() {
+    async function fetchAllSources() {
       try {
-        const response = await fetch('/api/tournaments')
-        const data = await response.json()
-
-        if (data.error) {
-          setError(data.error)
-          return
-        }
-
-        setTournaments(data.tournaments || [])
-      } catch (err) {
+        const results = await Promise.all(
+          SOURCE_LIST.map(async (src) => {
+            const res = await fetch(`/api/tournaments?source=${src.id}`)
+            const data = await res.json()
+            return data.tournaments || []
+          })
+        )
+        const all = results.flat()
+        const seen = new Set<string>()
+        const deduped = all.filter((t) => {
+          const id = getTournamentId(t.competitionName, t.date)
+          if (seen.has(id)) return false
+          seen.add(id)
+          return true
+        })
+        setTournaments(deduped)
+      } catch {
         setError('Failed to load tournaments')
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchTournaments()
+    fetchAllSources()
   }, [])
 
   useEffect(() => {
     const updateSavedTournaments = () => {
       const savedIds = getSavedTournaments()
       const filtered = tournaments.filter((tournament) => {
-        const tournamentId = `${tournament.competitionName || ''}-${tournament.date || ''}`
-          .replace(/\s+/g, '-')
-          .toLowerCase()
-        return savedIds.has(tournamentId)
+        return savedIds.has(getTournamentId(tournament.competitionName, tournament.date))
       })
       setSavedTournaments(filtered)
     }
@@ -80,6 +88,8 @@ export default function SavedPage() {
     return () => window.clearTimeout(timeout)
   }, [copyFeedback])
 
+  const { upcoming, past } = usePastUpcoming(savedTournaments);
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -99,7 +109,7 @@ export default function SavedPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4 font-serif tracking-tight">Saved Tournaments ({savedTournaments.length})</h1>
+        <h1 className="text-3xl font-bold mb-4 font-serif tracking-tight">Saved Tournaments ({upcoming.length})</h1>
 
         <div className="bg-muted/50 border border-border rounded-lg p-4 mb-6 flex items-start gap-3">
           <Info className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
@@ -114,14 +124,15 @@ export default function SavedPage() {
 
         {savedTournaments.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
-            <Button onClick={handleBulkExport} variant="default" className="gap-2 cursor-pointer">
+            <Button onClick={handleBulkExport} variant="outline" size="sm" className="gap-2 cursor-pointer">
               <Calendar className="h-4 w-4" />
               Download Calendar File
             </Button>
             <div className="relative">
               <Button
                 onClick={handleCopyDetails}
-                variant="secondary"
+                variant="outline"
+                size="sm"
                 className="gap-2 cursor-pointer"
               >
                 <Copy className="h-4 w-4" />
@@ -151,11 +162,15 @@ export default function SavedPage() {
         <>
           <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
           {viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {savedTournaments.map((tournament, index) => (
-                <EventCard key={`${tournament.competitionName}-${index}`} tournament={tournament} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {upcoming.map((tournament, index) => (
+                  <EventCard key={`${tournament.competitionName}-${index}`} tournament={tournament} />
+                ))}
+              </div>
+
+              <PastSection tournaments={past} className="mt-12 mb-12" />
+            </>
           ) : (
             <CalendarView tournaments={savedTournaments} />
           )}

@@ -12,15 +12,16 @@ import { toggleSavedTournament, isTournamentSaved } from "@/lib/saved-tournament
 import { generateGoogleCalendarUrl } from "@/lib/calendar-export"
 import { Tournament } from "@/types/tournament"
 import { getTimezoneDiff } from "@/lib/timezone"
+import { getTournamentId } from "@/lib/tournament-id"
 
 interface EventCardProps {
   tournament: Tournament
 }
 
-const CATEGORY_CONFIG: Record<string, { label: string; bg: string; tabColor: string; tabText: string }> = {
-  premier: { label: 'Premier Regional', bg: '!bg-(--card-premier)', tabColor: 'bg-amber-400 dark:bg-amber-500', tabText: 'text-white dark:text-amber-950' },
-  wudc:    { label: 'WUDC',             bg: '!bg-(--card-wudc)',    tabColor: 'bg-cyan-500 dark:bg-cyan-400',    tabText: 'text-white dark:text-cyan-950' },
-  large:   { label: 'Large Tournament', bg: '!bg-(--card-large)',   tabColor: 'bg-emerald-400',                  tabText: 'text-white dark:text-emerald-950' },
+const CATEGORY_CONFIG: Record<string, { label: string; tabColor: string; tabText: string }> = {
+  premier: { label: 'Premier Regional', tabColor: 'bg-(--tab-premier)', tabText: 'text-(--tab-premier-text)' },
+  wudc:    { label: 'WUDC',             tabColor: 'bg-(--tab-wudc)',    tabText: 'text-(--tab-wudc-text)' },
+  large:   { label: 'Large Tournament', tabColor: 'bg-(--tab-large)',   tabText: 'text-(--tab-large-text)' },
 }
 
 function getFormatChipStyle(format: string) {
@@ -32,13 +33,12 @@ function getFormatChipStyle(format: string) {
 
 function getTeamCapChipStyle(teamCap: string) {
   const cap = parseInt(teamCap, 10)
-  if (!isNaN(cap) && cap > 80) return 'bg-primary/20 text-primary border-primary/40'
+  if (!isNaN(cap) && cap >= 80) return 'bg-primary/20 text-primary border-primary/40'
   return 'bg-muted text-muted-foreground'
 }
 
 export function EventCard({ tournament }: EventCardProps) {
-  // Generate unique ID for tournament
-  const tournamentId = `${tournament.competitionName}-${tournament.date}`.replace(/\s+/g, '-').toLowerCase()
+  const tournamentId = getTournamentId(tournament.competitionName, tournament.date)
 
   const [isSaved, setIsSaved] = useState(false)
   const flag = getCountryFlag(tournament.location)
@@ -57,11 +57,10 @@ export function EventCard({ tournament }: EventCardProps) {
     window.open(url, '_blank')
   }
 
-  // Get team cap display value
   const teamCapDisplay = tournament.teamCap && tournament.teamCap.trim() !== ''
   && tournament.teamCap !== 'N/A' && tournament.teamCap !== 'TBA'
     ? tournament.teamCap + " Teams"
-    : 'N/A'
+    : 'Teams TBA'
 
   const hasCategory = !!tournament.category
 
@@ -91,7 +90,6 @@ export function EventCard({ tournament }: EventCardProps) {
         "relative z-10 overflow-hidden h-full flex flex-col pt-0 pb-0",
         hasCategory && "rounded-t-none md:rounded-t-xl",
         hasCategory && "translate-y-3 md:translate-y-0 md:translate-x-0 md:transition-transform md:duration-300 md:ease-[cubic-bezier(0.25,1.3,0.5,1)] md:group-hover/card:translate-x-3 md:group-hover/card:translate-y-[3px]",
-        CATEGORY_CONFIG[tournament.category]?.bg,
       )}>
       <CardContent className="p-5 flex flex-col flex-1">
         <div className="space-y-4 flex-1">
@@ -126,17 +124,17 @@ export function EventCard({ tournament }: EventCardProps) {
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4 shrink-0" />
-              <span className="leading-relaxed">{tournament.date}</span>
+              <span className="leading-relaxed">{tournament.date || 'TBA'}</span>
             </div>
 
             <div className="flex items-start gap-2 text-muted-foreground">
               <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
-              <span className="leading-relaxed">{tournament.location}</span>
+              <span className="leading-relaxed">{tournament.location || 'TBA'}</span>
             </div>
 
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock className="h-4 w-4 shrink-0" />
-              <span className="leading-relaxed">{tournament.timezone}</span>
+              <span className="leading-relaxed">{tournament.timezone || 'TBA'}</span>
               {(() => {
                 const diff = getTimezoneDiff(tournament.timezone)
                 if (!diff) return null
@@ -178,7 +176,7 @@ export function EventCard({ tournament }: EventCardProps) {
             </Button>
           ) : (
             <Button size="sm" className="flex-1 opacity-50 cursor-not-allowed" disabled>
-              Register
+              Reg TBA
             </Button>
           )}
           {tournament.infoLink && tournament.infoLink !== "TBA" && tournament.infoLink.trim() !== "" ? (
@@ -189,7 +187,7 @@ export function EventCard({ tournament }: EventCardProps) {
             </Button>
           ) : (
             <Button variant="outline" size="sm" className="flex-1 opacity-50 cursor-not-allowed" disabled>
-              More Info
+              Info TBA
             </Button>
           )}
           <Button
