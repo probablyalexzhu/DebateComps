@@ -11,6 +11,8 @@ import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-
 import { CalendarView } from "@/components/custom/calendar-view";
 import { parseTournamentDateRange } from "@/lib/calendar-export";
 import { SOURCE_CONFIGS } from "@/lib/sources";
+import { usePastUpcoming } from "@/lib/use-past-upcoming";
+import { PastSection } from "@/components/custom/past-section";
 
 const ITEMS_PER_BATCH = 16;
 
@@ -110,8 +112,10 @@ export function TournamentsPage({ source }: { source: string }) {
     })
   }, [filters, tournaments])
 
-  const currentTournaments = filteredTournaments.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredTournaments.length;
+  const { upcoming: upcomingTournaments, past: pastTournaments } = usePastUpcoming(filteredTournaments);
+
+  const currentTournaments = upcomingTournaments.slice(0, visibleCount);
+  const hasMore = visibleCount < upcomingTournaments.length;
 
   const sections = useMemo<TournamentSection[]>(() => {
     const now = new Date();
@@ -134,7 +138,6 @@ export function TournamentsPage({ source }: { source: string }) {
         startDate = new Date();
       }
 
-      // If no month was found in the date string, inherit month from previous card
       if (!hasMonth && prevStartDate) {
         startDate.setMonth(prevStartDate.getMonth());
         startDate.setFullYear(prevStartDate.getFullYear());
@@ -313,6 +316,8 @@ export function TournamentsPage({ source }: { source: string }) {
             )}
 
             {hasMore && <div ref={sentinelRef} className="h-4" />}
+
+            <PastSection tournaments={pastTournaments} className="mb-12" />
           </>
         ) : (
           <CalendarView tournaments={filteredTournaments} />

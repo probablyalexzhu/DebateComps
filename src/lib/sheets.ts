@@ -51,12 +51,13 @@ export function extractCellLink(cell: CellData | undefined): string {
 export function getCategoryFromColor(
   cell: CellData | undefined,
   categoryColors: { hex: string; category: string }[],
+  threshold = 30,
 ): string {
   const bg = cell?.effectiveFormat?.backgroundColor;
   if (!bg) return '';
   const hex = rgbToHex(bg.red ?? 0, bg.green ?? 0, bg.blue ?? 0);
   for (const { hex: target, category } of categoryColors) {
-    if (colorDistance(hex, target) < 30) return category;
+    if (colorDistance(hex, target) < threshold) return category;
   }
   return '';
 }

@@ -128,7 +128,7 @@ function mapRow(
     tournament[propertyName] = value;
   });
 
-  tournament.category = getCategoryFromColor(cells[0], config.categoryColors);
+  tournament.category = getCategoryFromColor(cells[0], config.categoryColors, config.colorThreshold);
 
   if (config.postRow) {
     config.postRow(tournament);

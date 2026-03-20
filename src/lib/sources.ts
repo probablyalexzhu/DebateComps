@@ -18,25 +18,38 @@ const appendYearIfMissing =
 // --- Canada helpers ---
 
 const INSTITUTION_MAP = [
-  { match: 'calgary',          location: 'Calgary, Alberta, Canada',  timezone: 'MDT' },
-  { match: 'waterloo',         location: 'Waterloo, Ontario, Canada', timezone: 'EDT' },
-  { match: 'mcgill',           location: 'Montreal, Quebec, Canada',  timezone: 'EDT' },
-  { match: 'british columbia', location: 'Vancouver, BC, Canada',     timezone: 'PDT' },
-  { match: 'british colombia', location: 'Vancouver, BC, Canada',     timezone: 'PDT' },
-  { match: 'dalhousie',        location: 'Halifax, NS, Canada',       timezone: 'ADT' },
-  { match: 'queen',            location: 'Kingston, Ontario, Canada', timezone: 'EDT' },
-  { match: 'toronto',          location: 'Toronto, Ontario, Canada',  timezone: 'EDT' },
-  { match: 'uottawa',          location: 'Ottawa, Ontario, Canada',   timezone: 'EDT' },
-  { match: 'ottawa',           location: 'Ottawa, Ontario, Canada',   timezone: 'EDT' },
-  { match: 'eds',              location: 'Ottawa, Ontario, Canada',   timezone: 'EDT' },
+  { match: 'calgary',          location: 'Calgary, Alberta, Canada',  iana: 'America/Edmonton' },
+  { match: 'waterloo',         location: 'Waterloo, Ontario, Canada', iana: 'America/Toronto' },
+  { match: 'mcgill',           location: 'Montreal, Quebec, Canada',  iana: 'America/Toronto' },
+  { match: 'british columbia', location: 'Vancouver, BC, Canada',     iana: 'America/Vancouver' },
+  { match: 'british colombia', location: 'Vancouver, BC, Canada',     iana: 'America/Vancouver' },
+  { match: 'dalhousie',        location: 'Halifax, NS, Canada',       iana: 'America/Halifax' },
+  { match: 'queen',            location: 'Kingston, Ontario, Canada', iana: 'America/Toronto' },
+  { match: 'toronto',          location: 'Toronto, Ontario, Canada',  iana: 'America/Toronto' },
+  { match: 'western',          location: 'London, Ontario, Canada',   iana: 'America/Toronto' },
+  { match: 'carleton',         location: 'Ottawa, Ontario, Canada',   iana: 'America/Toronto' },
+  { match: 'uottawa',          location: 'Ottawa, Ontario, Canada',   iana: 'America/Toronto' },
+  { match: 'ottawa',           location: 'Ottawa, Ontario, Canada',   iana: 'America/Toronto' },
+  { match: 'eds',              location: 'Ottawa, Ontario, Canada',   iana: 'America/Toronto' },
 ];
 
-function resolveCanadaInfo(institution: string): { location: string; timezone: string } | null {
+function resolveCanadaInfo(institution: string): { location: string; iana: string } | null {
   const lower = institution.toLowerCase();
-  for (const { match, location, timezone } of INSTITUTION_MAP) {
-    if (lower.includes(match)) return { location, timezone };
+  for (const { match, location, iana } of INSTITUTION_MAP) {
+    if (lower.includes(match)) return { location, iana };
   }
   return null;
+}
+
+function timezoneAbbr(iana: string, dateStr: string): string {
+  try {
+    let date = new Date(dateStr);
+    if (isNaN(date.getTime())) date = new Date();
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone: iana, timeZoneName: 'short' }).formatToParts(date);
+    return parts.find(p => p.type === 'timeZoneName')?.value || iana;
+  } catch {
+    return iana;
+  }
 }
 
 const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)$/i;
@@ -79,6 +92,7 @@ export interface SourceConfig {
   cleanNewlinesOnExtract: boolean;
 
   categoryColors: { hex: string; category: string }[];
+  colorThreshold?: number;
 
   postRow?: (tournament: Record<string, string>) => void;
 
@@ -256,13 +270,14 @@ const canadaConfig: SourceConfig = {
     { hex: '#fff3cc', category: 'premier' },
     { hex: '#d9d9d9', category: 'large' },
   ],
+  colorThreshold: 15,
 
   postRow: (t) => {
     const mode = t._mode || '';
     const institution = t._institution || '';
     const resolved = resolveCanadaInfo(institution);
     t.location = mode === 'Online' ? 'Online' : (resolved ? resolved.location : institution);
-    if (resolved) t.timezone = resolved.timezone;
+    if (resolved) t.timezone = timezoneAbbr(resolved.iana, t.date);
     delete t._mode;
     delete t._institution;
   },
