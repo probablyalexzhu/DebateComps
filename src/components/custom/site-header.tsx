@@ -27,6 +27,7 @@ export function SiteHeader() {
           <span className="hidden sm:inline font-serif tracking-tight">DebateComps</span>
         </Link>
         <nav className="flex items-center gap-6 text-sm font-medium text-muted-foreground">
+          <CountryToggle />
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -36,7 +37,6 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <CountryToggle />
           <ThemeToggle />
         </nav>
       </div>

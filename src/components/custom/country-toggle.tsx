@@ -14,7 +14,7 @@ import {
 import { SOURCE_LIST } from "@/lib/sources";
 
 function FlagIcon({ code, className }: { code: string | null; className?: string }) {
-  if (!code) return <span className="inline-flex justify-center" style={{ width: '1.33rem' }}><Globe className={className ?? "h-4 w-4"} /></span>;
+  if (!code) return <span className="inline-flex justify-center" style={{ width: '1.33rem' }}><Globe className={className ?? "h-4 w-4 text-foreground"} /></span>;
   return <span className={`fi fi-${code} rounded-[0.25rem]`} style={{ fontSize: '1rem' }} />;
 }
 
