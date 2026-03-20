@@ -14,15 +14,6 @@ export function Footer() {
           </a>
           ,{" "}
           <a
-            href="https://docs.google.com/spreadsheets/d/1_LlgPi3rxGRpqr2AvP3Ngx1WjkDkarIkQqAn2itMceg"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-4"
-          >
-            IDS
-          </a>
-          , and{" "}
-          <a
             href="https://docs.google.com/spreadsheets/d/1rc_ozfJbcZlrYAjWeMcIkN9E_uvJet9HX42M1wX4yzY"
             target="_blank"
             rel="noopener noreferrer"
@@ -30,16 +21,16 @@ export function Footer() {
           >
             CUSID
           </a>
-          . Made by{" "}
+          , and{" "}
           <a
-            href="https://probablyalex.com/"
+            href="https://docs.google.com/spreadsheets/d/1_LlgPi3rxGRpqr2AvP3Ngx1WjkDkarIkQqAn2itMceg"
             target="_blank"
             rel="noopener noreferrer"
             className="underline underline-offset-4"
           >
-            Alex Zhu
+            IDS
           </a>
-          , Advait Sangle, Aditya Keerthi, Barton Lu
+          . Made by Alex, Aditya, Barton, Acon & Advait
         </p>
       </div>
     </footer>

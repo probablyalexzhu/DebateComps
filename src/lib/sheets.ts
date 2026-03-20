@@ -43,7 +43,7 @@ export function extractCellLink(cell: CellData | undefined): string {
   if (urlMatch) return urlMatch[0];
 
   const bareMatch = text.match(/(?:bit\.ly|tinyurl\.com|t\.co|forms\.gle|docs\.google\.com|[\w-]+\.[\w.]+)\/[^\s)>\]]+/);
-  if (bareMatch) return 'https://' + bareMatch[0];
+  if (bareMatch) return `https://${bareMatch[0]}`;
 
   return text;
 }

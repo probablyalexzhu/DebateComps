@@ -9,6 +9,7 @@ export async function fetchTournaments(sourceId: string): Promise<Tournament[]> 
   if (!config) throw new Error(`Unknown source: ${sourceId}`);
 
   const apiKey = process.env.SHEETS_API_KEY;
+  if (!apiKey) throw new Error('SHEETS_API_KEY environment variable is not set');
   const ranges = config.ranges();
 
   const results = await Promise.all(
@@ -96,15 +97,24 @@ function mapRow(
   headerRow: string[],
   label: string,
 ): Tournament {
-  const tournament: Record<string, string> = {};
+  const record: Tournament & Record<string, string> = {
+    competitionName: '',
+    location: '',
+    format: '',
+    date: '',
+    timezone: '',
+    regLink: '',
+    judgeRule: '',
+    fees: '',
+    profitStatus: '',
+    teamCap: '',
+    infoLink: '',
+    category: '',
+  };
 
-  // Initialize all mapped fields to empty string
-  for (const field of Object.values(config.headerMap)) {
-    tournament[field] = '';
-  }
   // Apply source-specific defaults
   for (const [field, value] of Object.entries(config.fieldDefaults)) {
-    tournament[field] = value;
+    record[field] = value;
   }
 
   headerRow.forEach((header, i) => {
@@ -125,14 +135,14 @@ function mapRow(
       value = transform(value, label);
     }
 
-    tournament[propertyName] = value;
+    record[propertyName] = value;
   });
 
-  tournament.category = getCategoryFromColor(cells[0], config.categoryColors, config.colorThreshold);
+  record.category = getCategoryFromColor(cells[0], config.categoryColors, config.colorThreshold);
 
   if (config.postRow) {
-    config.postRow(tournament);
+    config.postRow(record);
   }
 
-  return tournament as unknown as Tournament;
+  return record;
 }

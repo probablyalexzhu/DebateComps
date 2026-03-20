@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { parseTournamentDateRange } from '@/lib/calendar-export';
+import { MONTH_RE } from '@/lib/constants';
 import type { Tournament } from '@/types/tournament';
-
-const MONTH_RE = /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i;
 
 export function usePastUpcoming(tournaments: Tournament[]) {
   return useMemo(() => {

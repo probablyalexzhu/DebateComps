@@ -12,6 +12,7 @@ import { copyTournamentsToClipboard } from '@/lib/clipboard-copy'
 import { CalendarView } from '@/components/custom/calendar-view'
 import { ViewToggle } from '@/components/custom/view-toggle'
 import { usePastUpcoming } from '@/lib/use-past-upcoming'
+import { getTournamentId } from '@/lib/tournament-id'
 import type { Tournament } from '@/types/tournament'
 
 export default function SavedPage() {
@@ -32,8 +33,16 @@ export default function SavedPage() {
             return data.tournaments || []
           })
         )
-        setTournaments(results.flat())
-      } catch (err) {
+        const all = results.flat()
+        const seen = new Set<string>()
+        const deduped = all.filter((t) => {
+          const id = getTournamentId(t.competitionName, t.date)
+          if (seen.has(id)) return false
+          seen.add(id)
+          return true
+        })
+        setTournaments(deduped)
+      } catch {
         setError('Failed to load tournaments')
       } finally {
         setIsLoading(false)
@@ -47,10 +56,7 @@ export default function SavedPage() {
     const updateSavedTournaments = () => {
       const savedIds = getSavedTournaments()
       const filtered = tournaments.filter((tournament) => {
-        const tournamentId = `${tournament.competitionName || ''}-${tournament.date || ''}`
-          .replace(/\s+/g, '-')
-          .toLowerCase()
-        return savedIds.has(tournamentId)
+        return savedIds.has(getTournamentId(tournament.competitionName, tournament.date))
       })
       setSavedTournaments(filtered)
     }
@@ -118,14 +124,15 @@ export default function SavedPage() {
 
         {savedTournaments.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
-            <Button onClick={handleBulkExport} variant="default" className="gap-2 cursor-pointer">
+            <Button onClick={handleBulkExport} variant="outline" size="sm" className="gap-2 cursor-pointer">
               <Calendar className="h-4 w-4" />
               Download Calendar File
             </Button>
             <div className="relative">
               <Button
                 onClick={handleCopyDetails}
-                variant="secondary"
+                variant="outline"
+                size="sm"
                 className="gap-2 cursor-pointer"
               >
                 <Copy className="h-4 w-4" />

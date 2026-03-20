@@ -11,6 +11,7 @@ import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-
 import { CalendarView } from "@/components/custom/calendar-view";
 import { parseTournamentDateRange } from "@/lib/calendar-export";
 import { SOURCE_CONFIGS } from "@/lib/sources";
+import { getAbsHourDiff } from "@/lib/timezone";
 import { usePastUpcoming } from "@/lib/use-past-upcoming";
 import { PastSection } from "@/components/custom/past-section";
 
@@ -19,7 +20,7 @@ const ITEMS_PER_BATCH = 16;
 type ViewMode = 'grid' | 'calendar';
 type TournamentSection = { label: string; tournaments: Tournament[] };
 
-const GRID_CLASSNAME = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6";
+import { GRID_CLASSNAME, MONTH_RE } from "@/lib/constants";
 
 /**
  * TournamentsPage is the shared page component rendered by all source routes
@@ -108,6 +109,15 @@ export function TournamentsPage({ source }: { source: string }) {
       }
       // If teamCap is N/A or invalid, include it in results
 
+      // Timezone proximity filter
+      if (filters.timezoneProximity !== 'any') {
+        const diff = getAbsHourDiff(tournament.timezone || '')
+        if (diff === null) return false
+        if (filters.timezoneProximity === 'same' && diff > 0) return false
+        if (filters.timezoneProximity === 'close' && (diff < 1 || diff > 3)) return false
+        if (filters.timezoneProximity === 'far' && (diff < 4 || diff > 8)) return false
+      }
+
       return true
     })
   }, [filters, tournaments])
@@ -124,7 +134,6 @@ export function TournamentsPage({ source }: { source: string }) {
 
     const thisWeek: Tournament[] = [];
     const monthGroups = new Map<string, Tournament[]>();
-    const MONTH_RE = /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i;
     let prevStartDate: Date | null = null;
 
     for (const t of currentTournaments) {
@@ -217,20 +226,24 @@ export function TournamentsPage({ source }: { source: string }) {
     fetchTournaments();
   }, [source]);
 
+  const pageHeader = (
+    <header className="mb-10">
+      <div className="flex flex-col justify-center pt-10 pb-6">
+        <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">
+          {pageTitle}
+          {sourceInfo.flagCode && <span className={`fi fi-${sourceInfo.flagCode} rounded-[0.375rem] ml-3 align-middle relative -top-[0.25rem]`} style={{ fontSize: '1.75rem' }} />}
+        </h1>
+        <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
+        <p className="text-xs text-muted-foreground/70 mt-2">Data from <a href={sourceInfo.sheetUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">{sourceInfo.sheetName}</a></p>
+      </div>
+    </header>
+  );
+
   if (loading) {
     return (
       <div className="bg-background">
         <div className="container mx-auto px-4 py-8">
-          <header className="mb-10">
-            <div className="flex flex-col justify-center pt-10 pb-6">
-              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">
-                {pageTitle}
-                {sourceInfo.flagCode && <span className={`fi fi-${sourceInfo.flagCode} rounded-[0.375rem] ml-3 align-middle relative -top-[0.25rem]`} style={{ fontSize: '1.75rem' }} />}
-              </h1>
-              <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
-              <p className="text-xs text-muted-foreground/70 mt-2">Data from <a href={sourceInfo.sheetUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">{sourceInfo.sheetName}</a></p>
-            </div>
-          </header>
+          {pageHeader}
           <div className="flex items-center justify-center py-12">
             <p className="text-lg text-muted-foreground">Loading tournaments...</p>
           </div>
@@ -243,16 +256,7 @@ export function TournamentsPage({ source }: { source: string }) {
     return (
       <div className="bg-background">
         <div className="container mx-auto px-4 py-8">
-          <header className="mb-10">
-            <div className="flex flex-col justify-center pt-10 pb-6">
-              <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">
-                {pageTitle}
-                {sourceInfo.flagCode && <span className={`fi fi-${sourceInfo.flagCode} rounded-[0.375rem] ml-3 align-middle relative -top-[0.25rem]`} style={{ fontSize: '1.75rem' }} />}
-              </h1>
-              <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
-              <p className="text-xs text-muted-foreground/70 mt-2">Data from <a href={sourceInfo.sheetUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">{sourceInfo.sheetName}</a></p>
-            </div>
-          </header>
+          {pageHeader}
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <p className="text-lg text-red-600 mb-2">Error loading tournaments</p>
@@ -267,16 +271,7 @@ export function TournamentsPage({ source }: { source: string }) {
   return (
     <div className="bg-background">
       <div className="container mx-auto px-4 py-8">
-        <header className="mb-10">
-          <div className="flex flex-col justify-center pt-10 pb-6">
-            <h1 className="text-4xl font-bold mb-2 font-serif tracking-tight">
-              {pageTitle}
-              {sourceInfo.flagCode && <span className={`fi fi-${sourceInfo.flagCode} rounded-[0.375rem] ml-3 align-middle relative -top-[0.25rem]`} style={{ fontSize: '1.75rem' }} />}
-            </h1>
-            <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
-            <p className="text-xs text-muted-foreground/70 mt-2">Data from <a href={sourceInfo.sheetUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">{sourceInfo.sheetName}</a></p>
-          </div>
-        </header>
+        {pageHeader}
 
         <SearchFilterBar filters={filters} onFiltersChange={handleFiltersChange} />
 

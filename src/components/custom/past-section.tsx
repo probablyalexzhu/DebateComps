@@ -3,9 +3,8 @@
 import { ChevronRight } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { EventCard } from '@/components/custom/event-card';
+import { GRID_CLASSNAME } from '@/lib/constants';
 import type { Tournament } from '@/types/tournament';
-
-const GRID_CLASSNAME = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6';
 
 export function PastSection({ tournaments, className }: { tournaments: Tournament[]; className?: string }) {
   if (tournaments.length === 0) return null;

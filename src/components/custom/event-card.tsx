@@ -12,6 +12,7 @@ import { toggleSavedTournament, isTournamentSaved } from "@/lib/saved-tournament
 import { generateGoogleCalendarUrl } from "@/lib/calendar-export"
 import { Tournament } from "@/types/tournament"
 import { getTimezoneDiff } from "@/lib/timezone"
+import { getTournamentId } from "@/lib/tournament-id"
 
 interface EventCardProps {
   tournament: Tournament
@@ -37,8 +38,7 @@ function getTeamCapChipStyle(teamCap: string) {
 }
 
 export function EventCard({ tournament }: EventCardProps) {
-  // Generate unique ID for tournament
-  const tournamentId = `${tournament.competitionName}-${tournament.date}`.replace(/\s+/g, '-').toLowerCase()
+  const tournamentId = getTournamentId(tournament.competitionName, tournament.date)
 
   const [isSaved, setIsSaved] = useState(false)
   const flag = getCountryFlag(tournament.location)
