@@ -286,8 +286,8 @@ export function TournamentsPage({ source }: { source: string }) {
           <>
             {sections.map((section) =>
               section.label === "This Week" ? (
-                <div key={section.label} className="this-week-banner mb-8 pt-8 pb-12">
-                  <h2 className="text-2xl font-semibold mb-6 text-white font-serif tracking-tight">
+                <div key={section.label} className="mb-12 bg-primary/[0.08] dark:bg-primary/[0.08] rounded-2xl p-6 sm:p-8">
+                  <h2 className={`text-2xl font-semibold text-foreground font-serif tracking-tight ${section.tournaments[0]?.category ? "mb-7 md:mb-4" : "mb-4"}`}>
                     {section.label} ({section.tournaments.length})
                   </h2>
                   <div className={GRID_CLASSNAME}>
