@@ -1,20 +1,16 @@
 import { NextResponse } from 'next/server';
-import { fetchGlobalTournaments } from './global_route';
-import { fetchIndiaTournaments } from './india_route';
-import { fetchCanadaTournaments } from './canada_route';
+import { fetchTournaments } from '@/lib/fetch-tournaments';
+import { SOURCE_CONFIGS } from '@/lib/sources';
 
 export async function GET(request: Request) {
   const source = new URL(request.url).searchParams.get('source') ?? 'global';
 
+  if (!SOURCE_CONFIGS[source]) {
+    return NextResponse.json({ error: `Unknown source: ${source}` }, { status: 400 });
+  }
+
   try {
-    let tournaments;
-
-    switch (source) {
-      case 'india':  tournaments = await fetchIndiaTournaments(); break;
-      case 'canada': tournaments = await fetchCanadaTournaments(); break;
-      default:       tournaments = await fetchGlobalTournaments();
-    }
-
+    const tournaments = await fetchTournaments(source);
     const response = NextResponse.json({ tournaments });
     response.headers.set('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
     return response;

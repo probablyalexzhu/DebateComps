@@ -10,6 +10,7 @@ import { Tournament } from "@/types/tournament";
 import { FilterState, SearchFilterBar } from "@/components/custom/search-filter-bar";
 import { CalendarView } from "@/components/custom/calendar-view";
 import { parseTournamentDateRange } from "@/lib/calendar-export";
+import { SOURCE_CONFIGS } from "@/lib/sources";
 
 const ITEMS_PER_BATCH = 16;
 
@@ -17,12 +18,6 @@ type ViewMode = 'grid' | 'calendar';
 type TournamentSection = { label: string; tournaments: Tournament[] };
 
 const GRID_CLASSNAME = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 sm:gap-6";
-
-const SOURCE_INFO: Record<string, { label: string; flagCode: string; sheetName: string; sheetUrl: string }> = {
-  global: { label: '', flagCode: '', sheetName: 'Global Debating Spreadsheet', sheetUrl: 'https://docs.google.com/spreadsheets/d/1R9s3MAh1H_7rJ9NQhO18p6o7bvekrIDTk27l7emXk6o' },
-  india: { label: 'India', flagCode: 'in', sheetName: 'Indian Debating Spreadsheet', sheetUrl: 'https://docs.google.com/spreadsheets/d/1_LlgPi3rxGRpqr2AvP3Ngx1WjkDkarIkQqAn2itMceg' },
-  canada: { label: 'Canada', flagCode: 'ca', sheetName: 'CUSID University Schedule 2025–2026', sheetUrl: 'https://docs.google.com/spreadsheets/d/1rc_ozfJbcZlrYAjWeMcIkN9E_uvJet9HX42M1wX4yzY' },
-};
 
 /**
  * TournamentsPage is the shared page component rendered by all source routes
@@ -39,7 +34,7 @@ const SOURCE_INFO: Record<string, { label: string; flagCode: string; sheetName: 
  * - Customises the page title per source (e.g. "...in India", "...in Canada")
  */
 export function TournamentsPage({ source }: { source: string }) {
-  const sourceInfo = SOURCE_INFO[source] || SOURCE_INFO.global;
+  const sourceInfo = SOURCE_CONFIGS[source] || SOURCE_CONFIGS.global;
   const pageTitle = `DebateComps — The home for debate${sourceInfo.label ? ` in ${sourceInfo.label}` : ''}`;
 
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
