@@ -126,17 +126,17 @@ export function EventCard({ tournament }: EventCardProps) {
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4 shrink-0" />
-              <span className="leading-relaxed">{tournament.date}</span>
+              <span className="leading-relaxed">{tournament.date || 'TBA'}</span>
             </div>
 
             <div className="flex items-start gap-2 text-muted-foreground">
               <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
-              <span className="leading-relaxed">{tournament.location}</span>
+              <span className="leading-relaxed">{tournament.location || 'TBA'}</span>
             </div>
 
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock className="h-4 w-4 shrink-0" />
-              <span className="leading-relaxed">{tournament.timezone}</span>
+              <span className="leading-relaxed">{tournament.timezone || 'TBA'}</span>
               {(() => {
                 const diff = getTimezoneDiff(tournament.timezone)
                 if (!diff) return null
