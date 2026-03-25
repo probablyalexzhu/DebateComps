@@ -88,7 +88,7 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
     setCurrentView(newView)
   }
 
-  const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
+const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
     premier: { bg: 'var(--tab-premier)', text: 'var(--tab-premier-text)' },
     wudc:    { bg: 'var(--tab-wudc)',    text: 'var(--tab-wudc-text)' },
     large:   { bg: 'var(--tab-large)',   text: 'var(--tab-large-text)' },
@@ -155,11 +155,11 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
       <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
         <DialogPortal>
           <DialogOverlay />
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
             <DialogTitle className="sr-only">
               {selectedEvent ? selectedEvent.resource.competitionName : 'Tournament Details'}
             </DialogTitle>
-            <div className="w-full max-w-xs overflow-visible">
+            <div className="w-full max-w-xs overflow-visible" onClick={e => e.stopPropagation()}>
               {selectedEvent && (
                 <EventCard
                   tournament={selectedEvent.resource}
