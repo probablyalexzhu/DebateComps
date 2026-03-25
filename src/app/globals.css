@@ -202,7 +202,6 @@
   html {
     background-color: var(--background);
     overflow-y: scroll;
-    scrollbar-gutter: stable;
   }
   body {
     @apply bg-background text-foreground;
