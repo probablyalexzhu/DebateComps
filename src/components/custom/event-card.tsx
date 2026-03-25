@@ -17,7 +17,6 @@ import { getTournamentId } from "@/lib/tournament-id"
 interface EventCardProps {
   tournament: Tournament
   onClose?: () => void
-  inlineTab?: boolean
 }
 
 const CATEGORY_CONFIG: Record<string, { label: string; tabColor: string; tabText: string }> = {
@@ -39,7 +38,7 @@ function getTeamCapChipStyle(teamCap: string) {
   return 'bg-muted text-muted-foreground'
 }
 
-export function EventCard({ tournament, onClose, inlineTab = false }: EventCardProps) {
+export function EventCard({ tournament, onClose }: EventCardProps) {
   const tournamentId = getTournamentId(tournament.competitionName, tournament.date)
 
   const [isSaved, setIsSaved] = useState(false)
@@ -72,8 +71,7 @@ export function EventCard({ tournament, onClose, inlineTab = false }: EventCardP
         <div
           className={cn(
             "absolute top-0 bottom-0 left-0 right-0 rounded-xl",
-            !inlineTab && "-translate-y-3 md:translate-y-0",
-            "md:-translate-x-[4px] md:group-hover/card:-translate-x-3 md:group-hover/card:-translate-y-[3px]",
+            "-translate-y-3 md:translate-y-0 md:-translate-x-[4px] md:group-hover/card:-translate-x-3 md:group-hover/card:-translate-y-[3px]",
             "transition-transform duration-300 ease-[cubic-bezier(0.25,1.3,0.5,1)]",
             "flex md:items-center md:justify-start md:pl-0.5 items-start justify-center pt-0.5",
             CATEGORY_CONFIG[tournament.category]?.tabColor,
@@ -91,9 +89,8 @@ export function EventCard({ tournament, onClose, inlineTab = false }: EventCardP
       )}
       <Card className={cn(
         "relative z-10 overflow-hidden h-full flex flex-col pt-0 pb-0",
-        hasCategory && !inlineTab && "rounded-t-none md:rounded-t-xl",
-        hasCategory && "md:translate-x-0 md:transition-transform md:duration-300 md:ease-[cubic-bezier(0.25,1.3,0.5,1)] md:group-hover/card:translate-x-3 md:group-hover/card:translate-y-[3px]",
-        hasCategory && !inlineTab && "translate-y-3 md:translate-y-0",
+        hasCategory && "rounded-t-none md:rounded-t-xl",
+        hasCategory && "translate-y-3 md:translate-y-0 md:translate-x-0 md:transition-transform md:duration-300 md:ease-[cubic-bezier(0.25,1.3,0.5,1)] md:group-hover/card:translate-x-3 md:group-hover/card:translate-y-[3px]",
       )}>
       <CardContent className="p-5 flex flex-col flex-1">
         <div className="space-y-4 flex-1">

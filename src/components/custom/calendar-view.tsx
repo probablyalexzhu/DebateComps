@@ -164,7 +164,6 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
                 <EventCard
                   tournament={selectedEvent.resource}
                   onClose={() => setSelectedEvent(null)}
-                  inlineTab={true}
                 />
               )}
             </div>
