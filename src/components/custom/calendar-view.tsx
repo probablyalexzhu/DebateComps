@@ -153,11 +153,16 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
       </Card>
 
       <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" showCloseButton={false}>
           <DialogTitle className="sr-only">
             {selectedEvent ? selectedEvent.resource.competitionName : 'Tournament Details'}
           </DialogTitle>
-          {selectedEvent && <EventCard tournament={selectedEvent.resource} />}
+          {selectedEvent && (
+            <EventCard
+              tournament={selectedEvent.resource}
+              onClose={() => setSelectedEvent(null)}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </>

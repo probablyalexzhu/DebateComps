@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, CircleDollarSign, Bookmark, Clock, Globe, Wifi } from "lucide-react"
+import { Calendar, MapPin, CircleDollarSign, Bookmark, Clock, Globe, Wifi, X } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { getCountryFlag } from "@/lib/country-flags"
 import { cn } from "@/lib/utils"
@@ -16,6 +16,7 @@ import { getTournamentId } from "@/lib/tournament-id"
 
 interface EventCardProps {
   tournament: Tournament
+  onClose?: () => void
 }
 
 const CATEGORY_CONFIG: Record<string, { label: string; tabColor: string; tabText: string }> = {
@@ -37,7 +38,7 @@ function getTeamCapChipStyle(teamCap: string) {
   return 'bg-muted text-muted-foreground'
 }
 
-export function EventCard({ tournament }: EventCardProps) {
+export function EventCard({ tournament, onClose }: EventCardProps) {
   const tournamentId = getTournamentId(tournament.competitionName, tournament.date)
 
   const [isSaved, setIsSaved] = useState(false)
@@ -101,13 +102,24 @@ export function EventCard({ tournament }: EventCardProps) {
             ) : (
               <Globe className="h-6 w-6 text-foreground" />
             )}
-            <button
-              onClick={handleToggleSave}
-              className="-m-1.5 p-2.5 ml-3 rounded-full hover:bg-muted transition-colors cursor-pointer shrink-0"
-              aria-label={isSaved ? "Remove from saved" : "Save tournament"}
-            >
-              <Bookmark className={cn("h-5 w-5", isSaved && "fill-current")} />
-            </button>
+            <div className="flex items-center">
+              <button
+                onClick={handleToggleSave}
+                className="-m-1.5 p-2.5 ml-3 rounded-full hover:bg-muted transition-colors cursor-pointer shrink-0"
+                aria-label={isSaved ? "Remove from saved" : "Save tournament"}
+              >
+                <Bookmark className={cn("h-5 w-5", isSaved && "fill-current")} />
+              </button>
+              {onClose && (
+                <button
+                  onClick={onClose}
+                  className="-m-1.5 p-2.5 ml-1 rounded-full hover:bg-muted transition-colors cursor-pointer shrink-0"
+                  aria-label="Close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              )}
+            </div>
           </div>
           <div>
             <h3 className="font-semibold text-lg leading-tight text-balance">{tournament.competitionName}</h3>
