@@ -8,7 +8,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tournament } from '@/types/tournament'
 import { parseTournamentDateRange } from '@/lib/calendar-export'
 import { Card } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogPortal, DialogOverlay, DialogTitle } from '@/components/ui/dialog'
 import { EventCard } from '@/components/custom/event-card'
 import { useMemo, useState } from 'react'
 
@@ -153,17 +153,23 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
       </Card>
 
       <Dialog open={!!selectedEvent} onOpenChange={(open) => !open && setSelectedEvent(null)}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" showCloseButton={false}>
-          <DialogTitle className="sr-only">
-            {selectedEvent ? selectedEvent.resource.competitionName : 'Tournament Details'}
-          </DialogTitle>
-          {selectedEvent && (
-            <EventCard
-              tournament={selectedEvent.resource}
-              onClose={() => setSelectedEvent(null)}
-            />
-          )}
-        </DialogContent>
+        <DialogPortal>
+          <DialogOverlay />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <DialogTitle className="sr-only">
+              {selectedEvent ? selectedEvent.resource.competitionName : 'Tournament Details'}
+            </DialogTitle>
+            <div className="w-full max-w-xs overflow-visible">
+              {selectedEvent && (
+                <EventCard
+                  tournament={selectedEvent.resource}
+                  onClose={() => setSelectedEvent(null)}
+                  inlineTab={true}
+                />
+              )}
+            </div>
+          </div>
+        </DialogPortal>
       </Dialog>
     </>
   )
