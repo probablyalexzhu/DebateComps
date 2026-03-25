@@ -144,6 +144,7 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
             onView={handleView}
             onSelectEvent={handleSelectEvent}
             views={['month', 'week', 'day', 'agenda']}
+            messages={{ showMore: (count) => `+${count}` }}
             popup
             eventPropGetter={(event: CalendarEvent) => {
               const isOnline = (event.resource.location || '').toLowerCase().includes('online')
