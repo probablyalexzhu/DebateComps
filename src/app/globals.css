@@ -208,6 +208,9 @@
     letter-spacing: var(--tracking-normal);
     overflow-x: hidden;
   }
+  /* Radix scroll-lock adds padding-right to compensate for the scrollbar disappearing.
+     We handle scrollbar visibility via overflow-y: scroll on html instead, so the
+     scrollbar never disappears and no compensation is needed. */
   body[data-scroll-locked] {
     padding-right: 0 !important;
     margin-right: 0 !important;

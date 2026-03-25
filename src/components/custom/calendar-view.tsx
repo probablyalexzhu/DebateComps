@@ -8,9 +8,9 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { Tournament } from '@/types/tournament'
 import { parseTournamentDateRange } from '@/lib/calendar-export'
 import { Card } from '@/components/ui/card'
-import { Dialog, DialogPortal, DialogOverlay, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogPortal, DialogOverlay } from '@/components/ui/dialog'
 import { EventCard } from '@/components/custom/event-card'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const localizer = dateFnsLocalizer({
   format,
@@ -32,10 +32,25 @@ interface CalendarViewProps {
   onSelectEvent?: (event: CalendarEvent) => void
 }
 
+const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
+  premier: { bg: 'var(--tab-premier)', text: 'var(--tab-premier-text)' },
+  wudc:    { bg: 'var(--tab-wudc)',    text: 'var(--tab-wudc-text)' },
+  large:   { bg: 'var(--tab-large)',   text: 'var(--tab-large-text)' },
+}
+
 export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [currentView, setCurrentView] = useState<View>('month')
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
+
+  useEffect(() => {
+    if (!selectedEvent) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedEvent(null)
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [selectedEvent])
 
   const events = useMemo(() => {
     return tournaments
@@ -86,12 +101,6 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
 
   const handleView = (newView: View) => {
     setCurrentView(newView)
-  }
-
-const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
-    premier: { bg: 'var(--tab-premier)', text: 'var(--tab-premier-text)' },
-    wudc:    { bg: 'var(--tab-wudc)',    text: 'var(--tab-wudc-text)' },
-    large:   { bg: 'var(--tab-large)',   text: 'var(--tab-large-text)' },
   }
 
   return (
@@ -156,10 +165,13 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
         <DialogPortal>
           <DialogOverlay />
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setSelectedEvent(null)}>
-            <DialogTitle className="sr-only">
-              {selectedEvent ? selectedEvent.resource.competitionName : 'Tournament Details'}
-            </DialogTitle>
-            <div className="w-full max-w-xs overflow-visible" onClick={e => e.stopPropagation()}>
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label={selectedEvent ? selectedEvent.resource.competitionName : 'Tournament Details'}
+              className="w-full max-w-xs overflow-visible"
+              onClick={e => e.stopPropagation()}
+            >
               {selectedEvent && (
                 <EventCard
                   tournament={selectedEvent.resource}
