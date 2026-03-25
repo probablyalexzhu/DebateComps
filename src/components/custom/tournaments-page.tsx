@@ -286,7 +286,7 @@ export function TournamentsPage({ source }: { source: string }) {
           <>
             {sections.map((section) =>
               section.label === "This Week" ? (
-                <div key={section.label} className="mb-12 bg-primary/[0.08] dark:bg-primary/[0.08] rounded-2xl -mx-6 px-6 sm:-mx-8 sm:px-8 pt-6 pb-12 sm:pt-8 sm:pb-12">
+                <div key={section.label} className="mb-12 bg-primary/[0.08] dark:bg-primary/[0.08] rounded-none sm:rounded-2xl -mx-6 px-6 sm:-mx-8 sm:px-8 pt-6 pb-12 sm:pt-8 sm:pb-12">
                   <h2 className={`text-2xl font-semibold text-foreground font-serif tracking-tight ${section.tournaments[0]?.category ? "mb-7 md:mb-4" : "mb-4"}`}>
                     {section.label} ({section.tournaments.length})
                   </h2>
