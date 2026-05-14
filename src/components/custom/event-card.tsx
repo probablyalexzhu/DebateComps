@@ -13,6 +13,7 @@ import { generateGoogleCalendarUrl } from "@/lib/calendar-export"
 import { Tournament } from "@/types/tournament"
 import { getTimezoneDiff } from "@/lib/timezone"
 import { getTournamentId } from "@/lib/tournament-id"
+import { LinkButton } from "@/components/custom/link-button"
 
 interface EventCardProps {
   tournament: Tournament
@@ -180,28 +181,22 @@ export function EventCard({ tournament, onClose }: EventCardProps) {
         </div>
 
         <div className="flex gap-2 pt-3 mt-auto">
-          {tournament.regLink && tournament.regLink !== "TBA" && tournament.regLink.trim() !== "" ? (
-            <Button asChild size="sm" className="flex-1">
-              <a href={tournament.regLink} target="_blank" rel="noopener noreferrer">
-                Register
-              </a>
-            </Button>
-          ) : (
-            <Button size="sm" className="flex-1 opacity-50 cursor-not-allowed" disabled>
-              Reg TBA
-            </Button>
-          )}
-          {tournament.infoLink && tournament.infoLink !== "TBA" && tournament.infoLink.trim() !== "" ? (
-            <Button asChild variant="outline" size="sm" className="flex-1">
-              <a href={tournament.infoLink} target="_blank" rel="noopener noreferrer">
-                More Info
-              </a>
-            </Button>
-          ) : (
-            <Button variant="outline" size="sm" className="flex-1 opacity-50 cursor-not-allowed" disabled>
-              Info TBA
-            </Button>
-          )}
+          <LinkButton
+            links={tournament.regLinks ?? []}
+            fallbackUrl={tournament.regLink}
+            label="Register"
+            tbaLabel="Reg TBA"
+            variant="default"
+            popoverTitle="Registration options"
+          />
+          <LinkButton
+            links={tournament.infoLinks ?? []}
+            fallbackUrl={tournament.infoLink}
+            label="More Info"
+            tbaLabel="Info TBA"
+            variant="outline"
+            popoverTitle="Information links"
+          />
           <Button
             onClick={handleExportToGoogleCal}
             variant="outline"

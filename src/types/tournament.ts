@@ -1,3 +1,5 @@
+import type { LinkEntry } from "@/lib/sheets";
+
 export interface Tournament {
   competitionName: string;
   location: string;
@@ -11,4 +13,6 @@ export interface Tournament {
   teamCap: string;
   infoLink: string;
   category: string;
+  regLinks?: LinkEntry[];
+  infoLinks?: LinkEntry[];
 }

@@ -24,28 +24,82 @@ export function extractCellValue(cell: CellData | undefined): string {
   return cell?.formattedValue || '';
 }
 
+export interface LinkEntry {
+  label: string | null;
+  url: string;
+}
+
 export function extractCellLink(cell: CellData | undefined): string {
-  if (!cell) return '';
+  return extractCellLinks(cell)[0]?.url ?? '';
+}
 
-  // 1. Single hyperlink on the whole cell
-  if (cell.hyperlink) return cell.hyperlink;
+export function extractCellLinks(cell: CellData | undefined): LinkEntry[] {
+  if (!cell) return [];
+  const text = cell.formattedValue || '';
 
-  // 2. Multiple hyperlinks — grab the first one from textFormatRuns
-  if (cell.textFormatRuns) {
-    for (const run of cell.textFormatRuns) {
-      if (run.format?.link?.uri) return run.format.link.uri;
+  type RawLink = { url: string; startIndex: number; endIndex: number };
+  const collected: RawLink[] = [];
+
+  if (cell.textFormatRuns && cell.textFormatRuns.length > 0) {
+    const runs = cell.textFormatRuns;
+    for (let i = 0; i < runs.length; i++) {
+      const uri = runs[i].format?.link?.uri;
+      if (!uri) continue;
+      const start = runs[i].startIndex ?? 0;
+      const end = runs[i + 1]?.startIndex ?? text.length;
+      collected.push({ url: uri, startIndex: start, endIndex: end });
     }
   }
 
-  // 3. Fall back to extracting a URL from the display text
-  const text = cell.formattedValue || '';
-  const urlMatch = text.match(/https?:\/\/[^\s)>\]]+/);
-  if (urlMatch) return urlMatch[0];
+  if (collected.length === 0 && cell.hyperlink) {
+    collected.push({ url: cell.hyperlink, startIndex: 0, endIndex: text.length });
+  }
 
-  const bareMatch = text.match(/(?:bit\.ly|tinyurl\.com|t\.co|forms\.gle|docs\.google\.com|[\w-]+\.[\w.]+)\/[^\s)>\]]+/);
-  if (bareMatch) return `https://${bareMatch[0]}`;
+  const urlRegex = /https?:\/\/[^\s)>\]]+/g;
+  let m: RegExpExecArray | null;
+  while ((m = urlRegex.exec(text)) !== null) {
+    const start = m.index;
+    const url = m[0];
+    const dup = collected.some(c => c.url === url || (start >= c.startIndex && start < c.endIndex));
+    if (!dup) collected.push({ url, startIndex: start, endIndex: start + url.length });
+  }
 
-  return text;
+  if (collected.length === 0) {
+    const bareMatch = text.match(/(?:bit\.ly|tinyurl\.com|t\.co|forms\.gle|docs\.google\.com|[\w-]+\.[\w.]+)\/[^\s)>\]]+/);
+    if (bareMatch && bareMatch.index !== undefined) {
+      const url = `https://${bareMatch[0]}`;
+      collected.push({ url, startIndex: bareMatch.index, endIndex: bareMatch.index + bareMatch[0].length });
+    }
+  }
+
+  if (collected.length === 0) return [];
+
+  collected.sort((a, b) => a.startIndex - b.startIndex);
+
+  const seen = new Set<string>();
+  const unique = collected.filter(c => {
+    if (seen.has(c.url)) return false;
+    seen.add(c.url);
+    return true;
+  });
+
+  return unique.map((entry, i) => {
+    const prevEnd = i > 0 ? unique[i - 1].endIndex : 0;
+    const labelArea = text.slice(prevEnd, entry.startIndex);
+    return { label: deriveLinkLabel(labelArea), url: entry.url };
+  });
+}
+
+function deriveLinkLabel(precedingText: string): string | null {
+  const trimmed = precedingText.replace(/\s+$/, '');
+  if (!trimmed) return null;
+  const segments = trimmed.split(/\n+/);
+  const lastLine = segments[segments.length - 1].trim();
+  const labelMatch = lastLine.match(/([^:\-\n]+?)\s*[:\-]\s*$/);
+  if (!labelMatch) return null;
+  const label = labelMatch[1].trim();
+  if (!label || label.length > 40) return null;
+  return label;
 }
 
 export function getCategoryFromColor(

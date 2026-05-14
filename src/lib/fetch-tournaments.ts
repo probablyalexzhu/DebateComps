@@ -1,5 +1,5 @@
 import { Tournament } from '@/types/tournament';
-import { CellData, extractCellValue, extractCellLink, getCategoryFromColor } from '@/lib/sheets';
+import { CellData, extractCellValue, extractCellLinks, getCategoryFromColor } from '@/lib/sheets';
 import { SOURCE_CONFIGS, SourceConfig, cleanNewlines } from '@/lib/sources';
 
 const SHEETS_FIELDS = 'sheets(data(rowData(values(formattedValue,hyperlink,textFormatRuns(format(link(uri)),startIndex),effectiveFormat(backgroundColor)))))';
@@ -97,7 +97,7 @@ function mapRow(
   headerRow: string[],
   label: string,
 ): Tournament {
-  const record: Tournament & Record<string, string> = {
+  const record: Tournament & Record<string, unknown> = {
     competitionName: '',
     location: '',
     format: '',
@@ -122,7 +122,9 @@ function mapRow(
 
     let value: string;
     if (config.linkFields.has(propertyName)) {
-      value = extractCellLink(cells[i]);
+      const links = extractCellLinks(cells[i]);
+      value = links[0]?.url ?? '';
+      record[`${propertyName}s`] = links;
     } else {
       value = extractCellValue(cells[i]);
       if (config.cleanNewlinesOnExtract) {
@@ -141,7 +143,7 @@ function mapRow(
   record.category = getCategoryFromColor(cells[0], config.categoryColors, config.colorThreshold);
 
   if (config.postRow) {
-    config.postRow(record);
+    config.postRow(record as unknown as Record<string, string>);
   }
 
   return record;
