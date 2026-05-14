@@ -36,6 +36,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   premier: { bg: 'var(--tab-premier)', text: 'var(--tab-premier-text)' },
   wudc:    { bg: 'var(--tab-wudc)',    text: 'var(--tab-wudc-text)' },
   large:   { bg: 'var(--tab-large)',   text: 'var(--tab-large-text)' },
+  rr:      { bg: 'var(--tab-rr)',      text: 'var(--tab-rr-text)' },
 }
 
 export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) {
@@ -128,6 +129,10 @@ export function CalendarView({ tournaments, onSelectEvent }: CalendarViewProps) 
             <div className="flex items-center gap-2">
               <div className="w-1 h-4 rounded-full" style={{ backgroundColor: 'var(--tab-wudc)' }}></div>
               <span className="text-sm text-foreground">WUDC</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 rounded-full" style={{ backgroundColor: 'var(--tab-rr)' }}></div>
+              <span className="text-sm text-foreground">Round Robin</span>
             </div>
           </div>
         )}

@@ -77,6 +77,7 @@ export function SearchFilterBar({ filters, onFiltersChange }: SearchFilterBarPro
     { value: "large", label: "Large" },
     { value: "premier", label: "Premier Regional" },
     { value: "wudc", label: "WUDC" },
+    { value: "rr", label: "Round Robin" },
   ]
 
   const formatOptions = [

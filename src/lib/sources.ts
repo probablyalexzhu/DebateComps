@@ -161,6 +161,7 @@ const globalConfig: SourceConfig = {
     { hex: '#fbbc04', category: 'premier' },
     { hex: '#25d6e4', category: 'wudc' },
     { hex: '#dd7e6b', category: 'large' },
+    { hex: '#93c47d', category: 'rr' },
   ],
 };
 
@@ -211,6 +212,7 @@ const indiaConfig: SourceConfig = {
 
   categoryColors: [
     { hex: '#e06666', category: 'large' },
+    { hex: '#93c47d', category: 'rr' },
   ],
 
   postRow: (t) => {
@@ -269,6 +271,7 @@ const canadaConfig: SourceConfig = {
     { hex: '#d9d2e9', category: 'premier' },
     { hex: '#fff3cc', category: 'premier' },
     { hex: '#d9d9d9', category: 'large' },
+    { hex: '#93c47d', category: 'rr' },
   ],
   colorThreshold: 15,
 

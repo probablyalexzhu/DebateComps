@@ -24,6 +24,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; tabColor: string; tabText
   premier: { label: 'Premier Regional', tabColor: 'bg-(--tab-premier)', tabText: 'text-(--tab-premier-text)' },
   wudc:    { label: 'WUDC',             tabColor: 'bg-(--tab-wudc)',    tabText: 'text-(--tab-wudc-text)' },
   large:   { label: 'Large Tournament', tabColor: 'bg-(--tab-large)',   tabText: 'text-(--tab-large-text)' },
+  rr:      { label: 'Round Robin',      tabColor: 'bg-(--tab-rr)',      tabText: 'text-(--tab-rr-text)' },
 }
 
 function getFormatChipStyle(format: string) {
