@@ -22,15 +22,15 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `https://debatecomps.com${config.route}`,
+      url: config.route,
       siteName: "DebateComps",
-      images: [{ url: "https://debatecomps.com/og-image.png" }],
+      images: [{ url: "/og-image.png", width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["https://debatecomps.com/og-image.png"],
+      images: ["/og-image.png"],
     },
   };
 }

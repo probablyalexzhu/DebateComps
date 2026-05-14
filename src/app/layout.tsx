@@ -17,21 +17,25 @@ const karla = Karla({
   subsets: ["latin"],
 });
 
+const title = "DebateComps — The world's debate calendar";
+const description = "Where debaters, adjudicators, and organizers come together to find the best competitions.";
+
 export const metadata: Metadata = {
-  title: "DebateComps — The world's debate calendar",
-  description: "Where debaters, adjudicators, and organizers come together to find the best competitions.",
+  metadataBase: new URL("https://debatecomps.com"),
+  title,
+  description,
   openGraph: {
-    title: "DebateComps — The world's debate calendar",
-    description: "Where debaters, adjudicators, and organizers come together to find the best competitions.",
-    url: "https://debatecomps.com",
+    title,
+    description,
+    url: "/",
     siteName: "DebateComps",
-    images: [{ url: "https://debatecomps.com/og-image.png" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "DebateComps — The world's debate calendar",
-    description: "Where debaters, adjudicators, and organizers come together to find the best competitions.",
-    images: ["https://debatecomps.com/og-image.png"],
+    title,
+    description,
+    images: ["/og-image.png"],
   },
 };
 
