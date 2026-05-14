@@ -47,7 +47,7 @@ export default function AboutPage() {
             <h2 className="text-lg font-semibold mb-2">Built by</h2>
             <p className="text-muted-foreground leading-relaxed">
               <a href="https://probablyalex.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Alex Zhu</a>
-              , Aditya Keerthi, Barton Lu, Acon Lin, and Advait Sangle.{" "}
+              , Aditya Keerthi, Barton Lu, Acon Lin, and <a href="https://advaitsangle.com" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Advait Sangle</a>.{" "}
               <a href="https://github.com/probablyalexzhu/DebateComps" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">View on GitHub</a>
             </p>
           </section>
