@@ -38,7 +38,9 @@ import { GRID_CLASSNAME, MONTH_RE } from "@/lib/constants";
  */
 export function TournamentsPage({ source }: { source: string }) {
   const sourceInfo = SOURCE_CONFIGS[source] || SOURCE_CONFIGS.global;
-  const pageTitle = `DebateComps — The home for debate${sourceInfo.label ? ` in ${sourceInfo.label}` : ''}`;
+  const pageTitle = sourceInfo.label
+    ? `DebateComps — ${sourceInfo.label}'s debate calendar`
+    : "DebateComps — The world's debate calendar";
 
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState(true);
@@ -233,7 +235,7 @@ export function TournamentsPage({ source }: { source: string }) {
           {pageTitle}
           {sourceInfo.flagCode && <span className={`fi fi-${sourceInfo.flagCode} rounded-[0.375rem] ml-3 align-middle relative -top-[0.25rem]`} style={{ fontSize: '1.75rem' }} />}
         </h1>
-        <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best opportunities.</p>
+        <p className="text-muted-foreground">Where debaters, adjudicators, and organizers come together to find the best competitions.</p>
         <p className="text-xs text-muted-foreground/70 mt-2">Data from <a href={sourceInfo.sheetUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground transition-colors">{sourceInfo.sheetName}</a></p>
       </div>
     </header>

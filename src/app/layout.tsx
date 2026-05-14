@@ -18,8 +18,21 @@ const karla = Karla({
 });
 
 export const metadata: Metadata = {
-  title: "DebateComps — The home for competitive debate",
-  description: "Where debaters, adjudicators, and organizers come together to find the best opportunities.",
+  title: "DebateComps — The world's debate calendar",
+  description: "Where debaters, adjudicators, and organizers come together to find the best competitions.",
+  openGraph: {
+    title: "DebateComps — The world's debate calendar",
+    description: "Where debaters, adjudicators, and organizers come together to find the best competitions.",
+    url: "https://debatecomps.com",
+    siteName: "DebateComps",
+    images: [{ url: "https://debatecomps.com/og-image.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DebateComps — The world's debate calendar",
+    description: "Where debaters, adjudicators, and organizers come together to find the best competitions.",
+    images: ["https://debatecomps.com/og-image.png"],
+  },
 };
 
 export default function RootLayout({
