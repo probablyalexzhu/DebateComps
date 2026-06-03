@@ -11,7 +11,7 @@ DebateComps is a curated tournament discovery platform for the global debate com
 Data is sourced from multiple community-managed Google Sheets:
 
 - [Global Debating Spreadsheet (GDS)](https://docs.google.com/spreadsheets/d/1R9s3MAh1H_7rJ9NQhO18p6o7bvekrIDTk27l7emXk6o) - International tournaments
-- [CUSID University Schedule](https://docs.google.com/spreadsheets/d/1rc_ozfJbcZlrYAjWeMcIkN9E_uvJet9HX42M1wX4yzY) - Canadian tournaments
+- [CUSID University Schedule](https://docs.google.com/spreadsheets/d/1EzzC_WpsQS6hT_ysH5NrUnRAfekZTrKJDkPmdBLOjio) - Canadian tournaments
 - [Indian Debating Spreadsheet (IDS)](https://docs.google.com/spreadsheets/d/1_LlgPi3rxGRpqr2AvP3Ngx1WjkDkarIkQqAn2itMceg) - Indian tournaments
 
 ## Features

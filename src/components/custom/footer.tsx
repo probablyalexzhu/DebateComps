@@ -14,7 +14,7 @@ export function Footer() {
           </a>
           ,{" "}
           <a
-            href="https://docs.google.com/spreadsheets/d/1rc_ozfJbcZlrYAjWeMcIkN9E_uvJet9HX42M1wX4yzY"
+            href="https://docs.google.com/spreadsheets/d/1EzzC_WpsQS6hT_ysH5NrUnRAfekZTrKJDkPmdBLOjio"
             target="_blank"
             rel="noopener noreferrer"
             className="underline underline-offset-4"

@@ -19,7 +19,7 @@ export default function AboutPage() {
               Data is pulled directly from the{" "}
               <a href="https://docs.google.com/spreadsheets/d/1R9s3MAh1H_7rJ9NQhO18p6o7bvekrIDTk27l7emXk6o/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Global Debating Spreadsheet</a>
               {" "}(created by Senkai Hsia, managed by Claire Beamer), the{" "}
-              <a href="https://docs.google.com/spreadsheets/d/1rc_ozfJbcZlrYAjWeMcIkN9E_uvJet9HX42M1wX4yzY" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">CUSID University Schedule</a>
+              <a href="https://docs.google.com/spreadsheets/d/1EzzC_WpsQS6hT_ysH5NrUnRAfekZTrKJDkPmdBLOjio" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">CUSID University Schedule</a>
               , and the{" "}
               <a href="https://docs.google.com/spreadsheets/d/1_LlgPi3rxGRpqr2AvP3Ngx1WjkDkarIkQqAn2itMceg" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Indian Debating Spreadsheet</a>
               , and refreshed automatically.

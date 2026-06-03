@@ -19,7 +19,10 @@ const appendYearIfMissing =
 
 const INSTITUTION_MAP = [
   { match: 'calgary',          location: 'Calgary, Alberta, Canada',  iana: 'America/Edmonton' },
+  { match: 'alberta',          location: 'Edmonton, Alberta, Canada', iana: 'America/Edmonton' },
   { match: 'waterloo',         location: 'Waterloo, Ontario, Canada', iana: 'America/Toronto' },
+  { match: 'laurier',          location: 'Waterloo, Ontario, Canada', iana: 'America/Toronto' },
+  { match: 'new brunswick',    location: 'Fredericton, NB, Canada',   iana: 'America/Moncton' },
   { match: 'mcgill',           location: 'Montreal, Quebec, Canada',  iana: 'America/Toronto' },
   { match: 'british columbia', location: 'Vancouver, BC, Canada',     iana: 'America/Vancouver' },
   { match: 'british colombia', location: 'Vancouver, BC, Canada',     iana: 'America/Vancouver' },
@@ -55,10 +58,15 @@ function timezoneAbbr(iana: string, dateStr: string): string {
 const MONTH_RE = /^(january|february|march|april|may|june|july|august|september|october|november|december)$/i;
 const NEW_YEAR_MONTHS_RE = /^(january|february|march|april)$/i;
 
-/** Academic year starting month (August). Returns the start year of the current cycle. */
+/**
+ * Start year of the CUSID calendar cycle. The schedule runs May–April (the
+ * sheet's first month is May), so before May we are still in the previous
+ * cycle. Used to label undated event rows with the correct calendar year:
+ * May–Dec → start year, Jan–Apr → start year + 1.
+ */
 function academicStartYear(): number {
   const now = new Date();
-  return now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1;
+  return now.getMonth() >= 4 ? now.getFullYear() : now.getFullYear() - 1;
 }
 
 // --- Types ---
@@ -232,13 +240,13 @@ const canadaConfig: SourceConfig = {
   flagCode: 'ca',
   route: '/canada',
   sheetName: 'CUSID University Schedule',
-  sheetUrl: 'https://docs.google.com/spreadsheets/d/1rc_ozfJbcZlrYAjWeMcIkN9E_uvJet9HX42M1wX4yzY',
+  sheetUrl: 'https://docs.google.com/spreadsheets/d/1EzzC_WpsQS6hT_ysH5NrUnRAfekZTrKJDkPmdBLOjio',
 
-  sheetId: '1rc_ozfJbcZlrYAjWeMcIkN9E_uvJet9HX42M1wX4yzY',
-  ranges: () => {
-    const start = academicStartYear();
-    return [{ label: '', range: `'${start}-${start + 1} university'!A1:G1000` }];
-  },
+  sheetId: '1EzzC_WpsQS6hT_ysH5NrUnRAfekZTrKJDkPmdBLOjio',
+  // The 2026-2027 sheet has a single tab whose title ("2025-2026 University")
+  // wasn't updated when the content was rolled forward, so we omit the tab name
+  // and read the first (only) sheet — robust to the stale title.
+  ranges: () => [{ label: '', range: 'A1:G1000' }],
 
   headerDetection: 'firstCellEquals',
   headerDetectionValue: 'Date',
@@ -267,11 +275,15 @@ const canadaConfig: SourceConfig = {
   },
   cleanNewlinesOnExtract: false,
 
+  // CUSID legend → site categories. All "Title" tournaments map to premier;
+  // International Major maps to large; Intervarsity (white) has no tab.
   categoryColors: [
-    { hex: '#d9d2e9', category: 'premier' },
-    { hex: '#fff3cc', category: 'premier' },
-    { hex: '#d9d9d9', category: 'large' },
-    { hex: '#93c47d', category: 'rr' },
+    { hex: '#d9d2e9', category: 'premier' }, // International Title
+    { hex: '#fff2cc', category: 'premier' }, // National Title
+    { hex: '#c9daf8', category: 'premier' }, // West Title
+    { hex: '#d9ead3', category: 'premier' }, // Central Title
+    { hex: '#f4cccc', category: 'premier' }, // East Title
+    { hex: '#d9d9d9', category: 'large' },   // International Major
   ],
   colorThreshold: 15,
 
