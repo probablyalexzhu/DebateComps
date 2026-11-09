@@ -24,6 +24,10 @@ export default function AboutPage() {
               <a href="https://docs.google.com/spreadsheets/d/1_LlgPi3rxGRpqr2AvP3Ngx1WjkDkarIkQqAn2itMceg" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Indian Debating Spreadsheet</a>
               , and refreshed automatically.
             </p>
+            <p className="text-muted-foreground leading-relaxed mt-3">
+              <a href="https://github.com/probablyalexzhu/DebateComps" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">View on GitHub</a>
+            </p>
+
           </section>
 
           <section>
@@ -46,10 +50,28 @@ export default function AboutPage() {
           <section>
             <h2 className="text-lg font-semibold mb-2">Built by</h2>
             <p className="text-muted-foreground leading-relaxed">
+              The Debate Company:{" "}
               <a href="https://probablyalex.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Alex Zhu</a>
-              , Aditya Keerthi, Barton Lu, Acon Lin, and <a href="https://advaitsangle.com" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Advait Sangle</a>.{" "}
-              <a href="https://github.com/probablyalexzhu/DebateComps" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">View on GitHub</a>
+              ,{" "}
+              <a href="https://advaitsangle.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Advait Sangle</a>
+              , and{" "}
+              <a href="https://acon.zip/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Acon Lin</a>
+              . With contributions from Aditya Keerthi and Barton Lu.
             </p>
+            
+            <p className="text-muted-foreground leading-relaxed mt-3">
+              Other websites by The Debate Company:
+            </p>
+            <ul className="text-muted-foreground leading-relaxed list-disc pl-5 mt-2 space-y-1">
+              <li>
+                <a href="https://underthink.ing/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">underthink.ing</a>
+                {" "}— debate motions, recorded rounds, and a drills timer. Made by Acon.
+              </li>
+              <li>
+                <a href="https://debate.uwaterloo.ca/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">debate.uwaterloo.ca</a>
+                {" "}— our university debate club&apos;s website, with our past results and resources to help both novice and advanced debaters improve.
+              </li>
+            </ul>
           </section>
         </div>
       </div>
